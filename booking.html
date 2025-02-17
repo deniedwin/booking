@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Booking - Outdoor Rock Climbing</title>
+  <style>
+    body {
+      font-family: Verdana, sans-serif;
+      background: #fff;
+      color: #000;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+    }
+    .radio-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+    }
+    .radio-group label {
+      display: inline-block;
+      width: 48%;
+    }
+    #priceDisplay {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    /* Calendar Styles */
+    #calendar {
+      margin-top: 10px;
+      text-align: center;
+    }
+    #calendar table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    #calendar th, #calendar td {
+      border: 1px solid #000;
+      padding: 5px;
+      width: 14%;
+      height: 40px;
+      text-align: center;
+    }
+    #calendar td.available {
+      cursor: pointer;
+    }
+    #calendar td.selected {
+      background: #000;
+      color: #fff;
+    }
+    #calendar .disabled {
+      color: #aaa;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      input, select, button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Booking</h1>
+    <form id="bookingForm">
+      <!-- Booking Type -->
+      <label>Booking Type:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="bookingType" value="single" checked> Single Booking</label>
+        <label><input type="radio" name="bookingType" value="group"> Group Booking</label>
+      </div>
+      <div id="groupQuantityContainer" style="display:none;">
+        <label>Number of Group Bookings:</label>
+        <input type="number" id="groupQuantity" min="1" value="1">
+      </div>
+      <!-- Currency -->
+      <label>Currency:</label>
+      <select id="currency">
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+      </select>
+      <!-- Price Display -->
+      <div id="priceDisplay">Price: USD 100</div>
+      
+      <!-- Date Selection - Custom Calendar -->
+      <label>Select Date (Only Thursday, Friday, Saturday available):</label>
+      <div id="calendar"></div>
+      <input type="hidden" id="selectedDate" name="selectedDate">
+      
+      <!-- Time Selection -->
+      <label>Time Slot:</label>
+      <div class="radio-group">
+        <label><input type="radio" name="timeSlot" value="sunrise" checked> Sunrise (5-8am)</label>
+        <label><input type="radio" name="timeSlot" value="sunset"> Sunset (4-7pm)</label>
+      </div>
+      
+      <!-- Personal Info -->
+      <label>Name:</label>
+      <input type="text" id="name" required>
+      <label>Email:</label>
+      <input type="email" id="email" required>
+      <label>Phone:</label>
+      <input type="tel" id="phone" required>
+      
+      <button type="button" id="reviewButton">Review</button>
+    </form>
+  </div>
+  
+  <script>
+    // Pricing Constants
+    const pricing = {
+      single: { USD: 100, EUR: 96 },
+      group: { USD: 90, EUR: 86 }
+    };
+
+    // Update Price Display function
+    function updatePrice() {
+      const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+      const currency = document.getElementById('currency').value;
+      let totalPrice = 0;
+      if (bookingType === "single") {
+        totalPrice = pricing.single[currency];
+      } else {
+        const quantity = parseInt(document.getElementById('groupQuantity').value) || 1;
+        totalPrice = pricing.group[currency] * quantity;
+      }
+      document.getElementById('priceDisplay').textContent = "Price: " + currency + " " + totalPrice;
+    }
+    
+    // Event listeners for booking type and currency changes
+    document.querySelectorAll('input[name="bookingType"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        if(this.value === "group") {
+          document.getElementById('groupQuantityContainer').style.display = 'block';
+        } else {
+          document.getElementById('groupQuantityContainer').style.display = 'none';
+        }
+        updatePrice();
+      });
+    });
+    document.getElementById('currency').addEventListener('change', updatePrice);
+    document.getElementById('groupQuantity').addEventListener('input', updatePrice);
+    
+    // Calendar Widget
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let selectedDate = null;
+    
+    function generateCalendar(month, year) {
+      const calendarDiv = document.getElementById('calendar');
+      calendarDiv.innerHTML = "";
+      
+      // Create header with month, year, and navigation
+      const headerDiv = document.createElement('div');
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = "<";
+      prevBtn.addEventListener('click', function() {
+        // Prevent navigating to past months
+        if(month === today.getMonth() && year === today.getFullYear()){
+          return;
+        }
+        if(month === 0) {
+          month = 11;
+          year--;
+        } else {
+          month--;
+        }
+        currentMonth = month;
+        currentYear = year;
+        generateCalendar(month, year);
+      });
+      // Disable prevBtn if showing the current month
+      if(month === today.getMonth() && year === today.getFullYear()){
+        prevBtn.disabled = true;
+      }
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = ">";
+      nextBtn.addEventListener('click', function() {
+        if(month === 11) {
+          month = 0;
+          year++;
+        } else {
+          month++;
+        }
+        currentMonth = month;
+        currentYear = year;
+        generateCalendar(month, year);
+      });
+      
+      const monthYearSpan = document.createElement('span');
+      monthYearSpan.textContent = " " + new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }) + " ";
+      
+      headerDiv.appendChild(prevBtn);
+      headerDiv.appendChild(monthYearSpan);
+      headerDiv.appendChild(nextBtn);
+      calendarDiv.appendChild(headerDiv);
+      
+      // Create calendar table
+      const table = document.createElement('table');
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      const daysOfWeek = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      daysOfWeek.forEach(day => {
+        const th = document.createElement('th');
+        th.textContent = day;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+      
+      const tbody = document.createElement('tbody');
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month+1, 0).getDate();
+      let date = 1;
+      // Use a fresh date for current-day comparison
+      const currentDay = new Date();
+      currentDay.setHours(0,0,0,0);
+      
+      for(let i = 0; i < 6; i++){
+        const row = document.createElement('tr');
+        for(let j = 0; j < 7; j++){
+          const cell = document.createElement('td');
+          if(i === 0 && j < firstDay) {
+            cell.textContent = "";
+          } else if(date > daysInMonth) {
+            cell.textContent = "";
+          } else {
+            cell.textContent = date;
+            let cellDate = new Date(year, month, date);
+            // Disable past dates
+            if(cellDate < currentDay) {
+              cell.classList.add('disabled');
+            } else {
+              // Only allow Thursday (4), Friday (5), and Saturday (6)
+              if(cellDate.getDay() === 4 || cellDate.getDay() === 5 || cellDate.getDay() === 6) {
+                cell.classList.add('available');
+                cell.addEventListener('click', function(){
+                  // Remove previous selection highlight
+                  document.querySelectorAll('#calendar td.selected').forEach(td => td.classList.remove('selected'));
+                  cell.classList.add('selected');
+                  selectedDate = cellDate;
+                  document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
+                });
+              } else {
+                cell.classList.add('disabled');
+              }
+            }
+            date++;
+          }
+          row.appendChild(cell);
+        }
+        tbody.appendChild(row);
+      }
+      table.appendChild(tbody);
+      calendarDiv.appendChild(table);
+    }
+    
+    generateCalendar(currentMonth, currentYear);
+    
+    // Form validation and review button action
+    document.getElementById('reviewButton').addEventListener('click', function(){
+      // Validate required fields: name, email, phone, and selected date
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const selectedDateValue = document.getElementById('selectedDate').value;
+      if(!name || !email || !phone) {
+        alert("Please fill in your name, email, and phone.");
+        return;
+      }
+      if(!selectedDateValue) {
+        alert("Please select a valid date.");
+        return;
+      }
+      // Gather booking details
+      const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
+      const currency = document.getElementById('currency').value;
+      const timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
+      let quantity = 1;
+      if(bookingType === "group") {
+        quantity = parseInt(document.getElementById('groupQuantity').value) || 1;
+      }
+      let price = 0;
+      if(bookingType === "single") {
+        price = pricing.single[currency];
+      } else {
+        price = pricing.group[currency] * quantity;
+      }
+      // Save details to localStorage
+      const bookingDetails = {
+        bookingType,
+        quantity,
+        currency,
+        price,
+        selectedDate: selectedDateValue,
+        timeSlot,
+        name,
+        email,
+        phone
+      };
+      localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
+      // Redirect to review page
+      window.location.href = "review.html";
+    });
+  </script>
+</body>
+</html>
