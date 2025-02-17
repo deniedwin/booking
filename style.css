@@ -63,7 +63,8 @@ html, body {
     right: 20px;
   }
   
-  .navigation button {
+  .navigation button,
+  .navigation .nav-button {
     width: 80px;
     height: 40px;
     margin-left: 10px;
@@ -71,6 +72,9 @@ html, body {
     background: #fff;
     color: #000;
     cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    line-height: 40px;
   }
   
   /* Calendar Container */
@@ -120,5 +124,19 @@ html, body {
   .calendar-header button {
     font-size: 14px;
     padding: 2px 5px;
+  }
+  
+  /* Review Table (Step 4) */
+  .review-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .review-table td {
+    padding: 5px;
+    text-align: left;
+  }
+  .review-table td:first-child {
+    font-weight: bold;
+    width: 40%;
   }
   

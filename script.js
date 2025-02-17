@@ -243,17 +243,21 @@ function getBookingData() {
   function initStep4() {
     const data = getBookingData();
     const reviewDiv = document.getElementById("reviewSummary");
-    reviewDiv.innerHTML = `
-      <p><strong>Booking Type:</strong> ${data.bookingType === "single" ? "Single Booking" : "Group Booking"}</p>
-      ${data.bookingType === "group" ? `<p><strong>Number of Group Bookings:</strong> ${data.groupQuantity}</p>` : ""}
-      <p><strong>Currency:</strong> ${data.currency}</p>
-      <p><strong>Total Price:</strong> ${data.currency} ${data.price}</p>
-      <p><strong>Date:</strong> ${data.selectedDate}</p>
-      <p><strong>Time Slot:</strong> ${data.timeSlot === "sunrise" ? "Sunrise (5-8am)" : "Sunset (4-7pm)"}</p>
-      <p><strong>Name:</strong> ${data.name}</p>
-      <p><strong>Email:</strong> ${data.email}</p>
-      <p><strong>Phone:</strong> ${data.phone}</p>
-    `;
+    let html = '<table class="review-table">';
+    html += '<tr><td>Booking Type:</td><td>' + (data.bookingType === "single" ? "Single Booking" : "Group Booking") + '</td></tr>';
+    if (data.bookingType === "group") {
+      html += '<tr><td>Group Quantity:</td><td>' + data.groupQuantity + '</td></tr>';
+    }
+    html += '<tr><td>Currency:</td><td>' + data.currency + '</td></tr>';
+    html += '<tr><td>Total Price:</td><td>' + data.currency + ' ' + data.price + '</td></tr>';
+    html += '<tr><td>Date:</td><td>' + data.selectedDate + '</td></tr>';
+    html += '<tr><td>Time Slot:</td><td>' + (data.timeSlot === "sunrise" ? "Sunrise (5-8am)" : "Sunset (4-7pm)") + '</td></tr>';
+    html += '<tr><td>Name:</td><td>' + data.name + '</td></tr>';
+    html += '<tr><td>Email:</td><td>' + data.email + '</td></tr>';
+    html += '<tr><td>Phone:</td><td>' + data.phone + '</td></tr>';
+    html += '</table>';
+    reviewDiv.innerHTML = html;
+    
     document.getElementById("back4").addEventListener("click", function() {
       window.location.href = "booking-details.html";
     });
