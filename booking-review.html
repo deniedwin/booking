@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Confirmation - Outdoor Rock Climbing</title>
+  <title>Booking - Step 4: Review & Pay</title>
   <style>
     html, body {
       margin: 0; padding: 0;
@@ -16,21 +16,27 @@
       width: 100%; max-width: 360px; height: 550px;
       margin: 20px; border: 3px solid #000;
       padding: 20px; box-sizing: border-box; position: relative;
-      text-align: center;
     }
-    a.button {
-      display: inline-block; padding: 10px 20px;
-      margin-top: 20px; text-decoration: none;
-      border: 3px solid #000; color: #000;
+    h2 { text-align: center; margin-top: 0; }
+    .summary { margin: 20px 0; overflow-y: auto; }
+    .navigation {
+      position: absolute; bottom: 20px; left: 20px;
+    }
+    .navigation button {
+      padding: 10px 20px; margin-right: 10px;
+      border: 3px solid #000; background: #fff; color: #000; cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Payment Confirmed</h2>
-    <p>Your payment has been processed successfully.<br>
-       A confirmation email will be sent to you shortly.</p>
-    <a href="index.html" class="button">Return Home</a>
+    <h2>Step 4: Review Your Booking</h2>
+    <div class="summary" id="reviewSummary"></div>
+    <div class="navigation">
+      <button id="back4">Back</button>
+      <button id="pay">Pay</button>
+    </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
