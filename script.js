@@ -24,12 +24,9 @@ function getBookingData() {
       single: { USD: 100, EUR: 96 },
       group: { USD: 90, EUR: 86 }
     };
-    let price = 0;
-    if (data.bookingType === "single") {
-      price = pricing.single[data.currency];
-    } else {
-      price = pricing.group[data.currency] * data.groupQuantity;
-    }
+    let price = data.bookingType === "single"
+      ? pricing.single[data.currency]
+      : pricing.group[data.currency] * data.groupQuantity;
     data.price = price;
     saveBookingData(data);
     const priceDisplay = document.getElementById("priceDisplay");
@@ -43,7 +40,7 @@ function getBookingData() {
     const data = getBookingData();
     // Set booking type radio button
     const radios = document.getElementsByName("bookingType");
-    radios.forEach(function(radio) {
+    radios.forEach(radio => {
       radio.checked = (radio.value === data.bookingType);
     });
     // Show/hide group quantity
@@ -59,16 +56,12 @@ function getBookingData() {
     updatePrice();
   
     // Add event listeners
-    document.querySelectorAll('input[name="bookingType"]').forEach(function(radio) {
+    document.querySelectorAll('input[name="bookingType"]').forEach(radio => {
       radio.addEventListener("change", function() {
         const d = getBookingData();
         d.bookingType = this.value;
         saveBookingData(d);
-        if (this.value === "group") {
-          groupContainer.style.display = "block";
-        } else {
-          groupContainer.style.display = "none";
-        }
+        groupContainer.style.display = (this.value === "group") ? "block" : "none";
         updatePrice();
       });
     });
@@ -94,7 +87,7 @@ function getBookingData() {
     const data = getBookingData();
     // Set time slot radio button
     const timeRadios = document.getElementsByName("timeSlot");
-    timeRadios.forEach(function(radio) {
+    timeRadios.forEach(radio => {
       radio.checked = (radio.value === data.timeSlot);
     });
     document.getElementById("back2").addEventListener("click", function() {
@@ -124,15 +117,10 @@ function getBookingData() {
     
     // Create header with month navigation
     const headerDiv = document.createElement("div");
-    headerDiv.style.display = "flex";
-    headerDiv.style.alignItems = "center";
-    headerDiv.style.justifyContent = "center";
-    headerDiv.style.gap = "5px";
+    headerDiv.className = "calendar-header";
     
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "<";
-    prevBtn.style.fontSize = "14px";
-    prevBtn.style.padding = "2px 5px";
     prevBtn.addEventListener("click", function() {
       if (currentMonth === 0) { currentMonth = 11; currentYear--; }
       else { currentMonth--; }
@@ -145,8 +133,6 @@ function getBookingData() {
     
     const nextBtn = document.createElement("button");
     nextBtn.textContent = ">";
-    nextBtn.style.fontSize = "14px";
-    nextBtn.style.padding = "2px 5px";
     nextBtn.addEventListener("click", function() {
       if (currentMonth === 11) { currentMonth = 0; currentYear++; }
       else { currentMonth++; }
@@ -158,6 +144,7 @@ function getBookingData() {
     headerDiv.appendChild(monthYearSpan);
     headerDiv.appendChild(nextBtn);
     calendarDiv.appendChild(headerDiv);
+    
     generateCalendarFor(currentMonth, currentYear);
   }
   
@@ -169,7 +156,7 @@ function getBookingData() {
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(function(day) {
+    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(day => {
       const th = document.createElement("th");
       th.textContent = day;
       headerRow.appendChild(th);
@@ -202,7 +189,7 @@ function getBookingData() {
               cell.classList.add("available");
               cell.addEventListener("click", function() {
                 const prevSelected = calendarDiv.querySelectorAll("td.selected");
-                prevSelected.forEach(function(td) { td.classList.remove("selected"); });
+                prevSelected.forEach(td => td.classList.remove("selected"));
                 cell.classList.add("selected");
                 const d = getBookingData();
                 d.selectedDate = cellDate.toISOString().split("T")[0];
@@ -277,17 +264,9 @@ function getBookingData() {
   
   // Initialization: Call the appropriate function based on the page
   document.addEventListener("DOMContentLoaded", function() {
-    if (document.getElementById("next1")) {
-      initStep1();
-    }
-    if (document.getElementById("next2")) {
-      initStep2();
-    }
-    if (document.getElementById("next3")) {
-      initStep3();
-    }
-    if (document.getElementById("pay")) {
-      initStep4();
-    }
+    if (document.getElementById("next1")) initStep1();
+    if (document.getElementById("next2")) initStep2();
+    if (document.getElementById("next3")) initStep3();
+    if (document.getElementById("pay")) initStep4();
   });
   

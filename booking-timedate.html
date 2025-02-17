@@ -4,52 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Booking - Step 2: Time Slot & Date</title>
-  <style>
-    html, body {
-      margin: 0; padding: 0;
-      background: #fff; color: #000;
-      font-family: Verdana, sans-serif;
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh;
-    }
-    .container {
-      width: 100%; max-width: 360px; height: 550px;
-      margin: 20px; border: 3px solid #000;
-      padding: 20px 20px 80px 20px; /* extra bottom padding */
-      box-sizing: border-box; position: relative;
-    }
-    h2 { margin-top: 0; text-align: center; }
-    label { display: block; margin-top: 10px; }
-    input, select, button {
-      font-size: 16px; width: 100%; padding: 8px; margin-top: 5px;
-      box-sizing: border-box; border: 1px solid #000; background: #fff; color: #000;
-    }
-    .radio-label {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-top: 10px; white-space: nowrap;
-    }
-    .navigation {
-      position: absolute; bottom: 20px; right: 20px;
-    }
-    .navigation button {
-      padding: 10px 20px; margin-left: 10px;
-      border: 1px solid #000; background: #fff; color: #000; cursor: pointer;
-    }
-    .calendar-container {
-      margin-top: 10px; text-align: center; overflow-x: auto;
-    }
-    .calendar-container table {
-      width: 100%; border-collapse: collapse;
-    }
-    .calendar-container th,
-    .calendar-container td {
-      border: 1px solid #000; padding: 5px;
-      width: 14%; height: 40px; text-align: center; box-sizing: border-box;
-    }
-    .calendar-container td.available { cursor: pointer; }
-    .calendar-container td.selected { background: #000; color: #fff; }
-    .calendar-container td.disabled { color: #aaa; }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
