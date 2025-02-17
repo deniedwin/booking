@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Booking - Outdoor Rock Climbing</title>
   <style>
+    /* Global Styles */
     body {
       font-family: Verdana, sans-serif;
       background: #fff;
@@ -15,15 +16,25 @@
     .container {
       max-width: 600px;
       margin: 0 auto;
+      border: 1px solid #000;
+      padding: 20px;
+      position: relative;
+      min-height: 400px;
     }
-    h1 {
-      text-align: center;
+    .step {
+      display: none;
+    }
+    .step.active {
+      display: block;
+    }
+    h2 {
+      margin-top: 0;
     }
     label {
       display: block;
       margin-top: 10px;
     }
-    input, select, button {
+    input, select {
       width: 100%;
       padding: 8px;
       margin-top: 5px;
@@ -32,125 +43,165 @@
       background: #fff;
       color: #000;
     }
-    .radio-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px;
+    /* Navigation Buttons (fixed at bottom left of container) */
+    .navigation {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
     }
-    .radio-group label {
-      display: inline-block;
-      width: 48%;
-    }
-    #priceDisplay {
-      margin-top: 10px;
-      font-weight: bold;
+    .navigation button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      border: 1px solid #000;
+      background: #fff;
+      color: #000;
+      cursor: pointer;
     }
     /* Calendar Styles */
-    #calendar {
+    .calendar-container {
       margin-top: 10px;
       text-align: center;
     }
-    #calendar table {
+    .calendar-container table {
       width: 100%;
       border-collapse: collapse;
     }
-    #calendar th, #calendar td {
+    .calendar-container th, 
+    .calendar-container td {
       border: 1px solid #000;
       padding: 5px;
       width: 14%;
       height: 40px;
       text-align: center;
     }
-    #calendar td.available {
+    .calendar-container td.available {
       cursor: pointer;
     }
-    #calendar td.selected {
+    .calendar-container td.selected {
       background: #000;
       color: #fff;
     }
-    #calendar .disabled {
+    .calendar-container td.disabled {
       color: #aaa;
     }
-    /* Responsive */
-    @media (max-width: 600px) {
-      input, select, button {
-        font-size: 16px;
-      }
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      color: #000;
+      z-index: 1000;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Booking</h1>
-    <form id="bookingForm">
-      <!-- Booking Type -->
+    <!-- Step 1: Booking Type & Currency -->
+    <div id="step1" class="step active">
+      <h2>Step 1: Booking Type & Currency</h2>
       <label>Booking Type:</label>
-      <div class="radio-group">
-        <label><input type="radio" name="bookingType" value="single" checked> Single Booking</label>
-        <label><input type="radio" name="bookingType" value="group"> Group Booking</label>
-      </div>
-      <div id="groupQuantityContainer" style="display:none;">
+      <label><input type="radio" name="bookingType" value="single" checked> Single Booking</label>
+      <label><input type="radio" name="bookingType" value="group"> Group Booking</label>
+      <div id="groupQuantityContainer" style="display: none;">
         <label>Number of Group Bookings:</label>
         <input type="number" id="groupQuantity" min="1" value="1">
       </div>
-      <!-- Currency -->
       <label>Currency:</label>
       <select id="currency">
         <option value="USD">USD</option>
         <option value="EUR">EUR</option>
       </select>
-      <!-- Price Display -->
-      <div id="priceDisplay">Price: USD 100</div>
-      
-      <!-- Date Selection - Custom Calendar -->
-      <label>Select Date (Only Thursday, Friday, Saturday available):</label>
-      <div id="calendar"></div>
-      <input type="hidden" id="selectedDate" name="selectedDate">
-      
-      <!-- Time Selection -->
-      <label>Time Slot:</label>
-      <div class="radio-group">
-        <label><input type="radio" name="timeSlot" value="sunrise" checked> Sunrise (5-8am)</label>
-        <label><input type="radio" name="timeSlot" value="sunset"> Sunset (4-7pm)</label>
+      <div id="priceDisplay" style="margin-top: 10px; font-weight: bold;">Price: USD 100</div>
+      <div class="navigation">
+        <button id="next1">Next</button>
       </div>
-      
-      <!-- Personal Info -->
+    </div>
+    
+    <!-- Step 2: Date & Time Slot -->
+    <div id="step2" class="step">
+      <h2>Step 2: Date & Time Slot</h2>
+      <label>Select Date (Only Thursday, Friday, Saturday available):</label>
+      <div id="calendar" class="calendar-container"></div>
+      <label>Time Slot:</label>
+      <label><input type="radio" name="timeSlot" value="sunrise" checked> Sunrise (5-8am)</label>
+      <label><input type="radio" name="timeSlot" value="sunset"> Sunset (4-7pm)</label>
+      <div class="navigation">
+        <button id="back2">Back</button>
+        <button id="next2">Next</button>
+      </div>
+    </div>
+    
+    <!-- Step 3: Client Details -->
+    <div id="step3" class="step">
+      <h2>Step 3: Client Details</h2>
       <label>Name:</label>
-      <input type="text" id="name" required>
+      <input type="text" id="name">
       <label>Email:</label>
-      <input type="email" id="email" required>
+      <input type="email" id="email">
       <label>Phone:</label>
-      <input type="tel" id="phone" required>
-      
-      <button type="button" id="reviewButton">Review</button>
-    </form>
+      <input type="tel" id="phone">
+      <div class="navigation">
+        <button id="back3">Back</button>
+        <button id="next3">Next</button>
+      </div>
+    </div>
+    
+    <!-- Step 4: Review -->
+    <div id="step4" class="step">
+      <h2>Step 4: Review Your Booking</h2>
+      <div id="reviewSummary" style="margin-bottom: 50px;"></div>
+      <div class="navigation">
+        <button id="back4">Back</button>
+        <button id="pay">Pay</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal for Payment Processing -->
+  <div id="modal" class="modal">
+    simulating payment processing, please wait
   </div>
   
   <script>
-    // Pricing Constants
+    /********* Global Variables & Data *********/
+    let bookingData = {
+      bookingType: "single",
+      groupQuantity: 1,
+      currency: "USD",
+      price: 100,
+      selectedDate: "",
+      timeSlot: "sunrise",
+      name: "",
+      email: "",
+      phone: ""
+    };
+    
     const pricing = {
       single: { USD: 100, EUR: 96 },
       group: { USD: 90, EUR: 86 }
     };
-
-    // Update Price Display function
-    function updatePrice() {
-      const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
-      const currency = document.getElementById('currency').value;
-      let totalPrice = 0;
-      if (bookingType === "single") {
-        totalPrice = pricing.single[currency];
-      } else {
-        const quantity = parseInt(document.getElementById('groupQuantity').value) || 1;
-        totalPrice = pricing.group[currency] * quantity;
-      }
-      document.getElementById('priceDisplay').textContent = "Price: " + currency + " " + totalPrice;
+    
+    /********* Navigation Functions *********/
+    function showStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(step => {
+        step.classList.remove('active');
+      });
+      document.getElementById('step' + stepNumber).classList.add('active');
     }
     
-    // Event listeners for booking type and currency changes
+    /********* Step 1: Booking Type & Currency *********/
     document.querySelectorAll('input[name="bookingType"]').forEach(radio => {
       radio.addEventListener('change', function() {
-        if(this.value === "group") {
+        bookingData.bookingType = this.value;
+        if (this.value === "group") {
           document.getElementById('groupQuantityContainer').style.display = 'block';
         } else {
           document.getElementById('groupQuantityContainer').style.display = 'none';
@@ -158,65 +209,83 @@
         updatePrice();
       });
     });
-    document.getElementById('currency').addEventListener('change', updatePrice);
-    document.getElementById('groupQuantity').addEventListener('input', updatePrice);
     
-    // Calendar Widget
-    let today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
-    let selectedDate = null;
+    document.getElementById('groupQuantity').addEventListener('input', function() {
+      bookingData.groupQuantity = parseInt(this.value) || 1;
+      updatePrice();
+    });
     
-    function generateCalendar(month, year) {
+    document.getElementById('currency').addEventListener('change', function() {
+      bookingData.currency = this.value;
+      updatePrice();
+    });
+    
+    function updatePrice() {
+      let price = 0;
+      if (bookingData.bookingType === "single") {
+        price = pricing.single[bookingData.currency];
+      } else {
+        price = pricing.group[bookingData.currency] * bookingData.groupQuantity;
+      }
+      bookingData.price = price;
+      document.getElementById('priceDisplay').textContent = "Price: " + bookingData.currency + " " + price;
+    }
+    
+    document.getElementById('next1').addEventListener('click', function() {
+      showStep(2);
+      generateCalendar(); // Initialize calendar on entering Step 2
+    });
+    
+    /********* Step 2: Date & Time Slot *********/
+    function generateCalendar() {
       const calendarDiv = document.getElementById('calendar');
       calendarDiv.innerHTML = "";
+      let today = new Date();
+      let currentMonth = today.getMonth();
+      let currentYear = today.getFullYear();
       
-      // Create header with month, year, and navigation
+      // Create header with month navigation
       const headerDiv = document.createElement('div');
       const prevBtn = document.createElement('button');
       prevBtn.textContent = "<";
       prevBtn.addEventListener('click', function() {
         // Prevent navigating to past months
-        if(month === today.getMonth() && year === today.getFullYear()){
-          return;
-        }
-        if(month === 0) {
-          month = 11;
-          year--;
+        if (currentMonth === today.getMonth() && currentYear === today.getFullYear()) return;
+        if (currentMonth === 0) {
+          currentMonth = 11;
+          currentYear--;
         } else {
-          month--;
+          currentMonth--;
         }
-        currentMonth = month;
-        currentYear = year;
-        generateCalendar(month, year);
+        generateCalendarFor(currentMonth, currentYear);
       });
-      // Disable prevBtn if showing the current month
-      if(month === today.getMonth() && year === today.getFullYear()){
-        prevBtn.disabled = true;
-      }
       const nextBtn = document.createElement('button');
       nextBtn.textContent = ">";
       nextBtn.addEventListener('click', function() {
-        if(month === 11) {
-          month = 0;
-          year++;
+        if (currentMonth === 11) {
+          currentMonth = 0;
+          currentYear++;
         } else {
-          month++;
+          currentMonth++;
         }
-        currentMonth = month;
-        currentYear = year;
-        generateCalendar(month, year);
+        generateCalendarFor(currentMonth, currentYear);
       });
-      
       const monthYearSpan = document.createElement('span');
-      monthYearSpan.textContent = " " + new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' }) + " ";
-      
+      monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString('default', { month: 'long', year: 'numeric' }) + " ";
       headerDiv.appendChild(prevBtn);
       headerDiv.appendChild(monthYearSpan);
       headerDiv.appendChild(nextBtn);
       calendarDiv.appendChild(headerDiv);
       
-      // Create calendar table
+      generateCalendarFor(currentMonth, currentYear);
+    }
+    
+    function generateCalendarFor(month, year) {
+      const calendarDiv = document.getElementById('calendar');
+      // Remove any existing table if present
+      const existingTable = calendarDiv.querySelector('table');
+      if (existingTable) calendarDiv.removeChild(existingTable);
+      
       const table = document.createElement('table');
       const thead = document.createElement('thead');
       const headerRow = document.createElement('tr');
@@ -231,36 +300,35 @@
       
       const tbody = document.createElement('tbody');
       const firstDay = new Date(year, month, 1).getDay();
-      const daysInMonth = new Date(year, month+1, 0).getDate();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
       let date = 1;
-      // Use a fresh date for current-day comparison
       const currentDay = new Date();
-      currentDay.setHours(0,0,0,0);
+      currentDay.setHours(0, 0, 0, 0);
       
-      for(let i = 0; i < 6; i++){
+      for (let i = 0; i < 6; i++) {
         const row = document.createElement('tr');
-        for(let j = 0; j < 7; j++){
+        for (let j = 0; j < 7; j++) {
           const cell = document.createElement('td');
-          if(i === 0 && j < firstDay) {
+          if (i === 0 && j < firstDay) {
             cell.textContent = "";
-          } else if(date > daysInMonth) {
+          } else if (date > daysInMonth) {
             cell.textContent = "";
           } else {
             cell.textContent = date;
             let cellDate = new Date(year, month, date);
             // Disable past dates
-            if(cellDate < currentDay) {
+            if (cellDate < currentDay) {
               cell.classList.add('disabled');
             } else {
-              // Only allow Thursday (4), Friday (5), and Saturday (6)
-              if(cellDate.getDay() === 4 || cellDate.getDay() === 5 || cellDate.getDay() === 6) {
+              // Enable only Thursday (4), Friday (5), Saturday (6)
+              if (cellDate.getDay() === 4 || cellDate.getDay() === 5 || cellDate.getDay() === 6) {
                 cell.classList.add('available');
-                cell.addEventListener('click', function(){
-                  // Remove previous selection highlight
-                  document.querySelectorAll('#calendar td.selected').forEach(td => td.classList.remove('selected'));
+                cell.addEventListener('click', function() {
+                  // Remove previous selection
+                  const prevSelected = calendarDiv.querySelectorAll('td.selected');
+                  prevSelected.forEach(td => td.classList.remove('selected'));
                   cell.classList.add('selected');
-                  selectedDate = cellDate;
-                  document.getElementById('selectedDate').value = selectedDate.toISOString().split('T')[0];
+                  bookingData.selectedDate = cellDate.toISOString().split('T')[0];
                 });
               } else {
                 cell.classList.add('disabled');
@@ -276,53 +344,94 @@
       calendarDiv.appendChild(table);
     }
     
-    generateCalendar(currentMonth, currentYear);
+    document.getElementById('back2').addEventListener('click', function() {
+      showStep(1);
+    });
     
-    // Form validation and review button action
-    document.getElementById('reviewButton').addEventListener('click', function(){
-      // Validate required fields: name, email, phone, and selected date
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const selectedDateValue = document.getElementById('selectedDate').value;
-      if(!name || !email || !phone) {
-        alert("Please fill in your name, email, and phone.");
-        return;
-      }
-      if(!selectedDateValue) {
+    document.getElementById('next2').addEventListener('click', function() {
+      if (!bookingData.selectedDate) {
         alert("Please select a valid date.");
         return;
       }
-      // Gather booking details
-      const bookingType = document.querySelector('input[name="bookingType"]:checked').value;
-      const currency = document.getElementById('currency').value;
-      const timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
-      let quantity = 1;
-      if(bookingType === "group") {
-        quantity = parseInt(document.getElementById('groupQuantity').value) || 1;
-      }
-      let price = 0;
-      if(bookingType === "single") {
-        price = pricing.single[currency];
-      } else {
-        price = pricing.group[currency] * quantity;
-      }
-      // Save details to localStorage
-      const bookingDetails = {
-        bookingType,
-        quantity,
-        currency,
-        price,
-        selectedDate: selectedDateValue,
-        timeSlot,
-        name,
-        email,
-        phone
-      };
-      localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
-      // Redirect to review page
-      window.location.href = "review.html";
+      // Save time slot selection
+      bookingData.timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
+      showStep(3);
     });
+    
+    /********* Step 3: Client Details *********/
+    document.getElementById('back3').addEventListener('click', function() {
+      showStep(2);
+    });
+    
+    document.getElementById('next3').addEventListener('click', function() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      if (!name || !email || !phone) {
+        alert("Please fill in all client details.");
+        return;
+      }
+      // Simple email format check
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      bookingData.name = name;
+      bookingData.email = email;
+      bookingData.phone = phone;
+      populateReview();
+      showStep(4);
+    });
+    
+    /********* Step 4: Review *********/
+    function populateReview() {
+      const reviewDiv = document.getElementById('reviewSummary');
+      reviewDiv.innerHTML = `
+        <p><strong>Booking Type:</strong> ${bookingData.bookingType === 'single' ? 'Single Booking' : 'Group Booking'}</p>
+        ${bookingData.bookingType === 'group' ? `<p><strong>Number of Group Bookings:</strong> ${bookingData.groupQuantity}</p>` : ''}
+        <p><strong>Currency:</strong> ${bookingData.currency}</p>
+        <p><strong>Total Price:</strong> ${bookingData.currency} ${bookingData.price}</p>
+        <p><strong>Date:</strong> ${bookingData.selectedDate}</p>
+        <p><strong>Time Slot:</strong> ${bookingData.timeSlot === 'sunrise' ? 'Sunrise (5-8am)' : 'Sunset (4-7pm)'}</p>
+        <p><strong>Name:</strong> ${bookingData.name}</p>
+        <p><strong>Email:</strong> ${bookingData.email}</p>
+        <p><strong>Phone:</strong> ${bookingData.phone}</p>
+      `;
+    }
+    
+    document.getElementById('back4').addEventListener('click', function() {
+      showStep(3);
+    });
+    
+    document.getElementById('pay').addEventListener('click', function() {
+      const modal = document.getElementById('modal');
+      modal.style.display = 'flex';
+      setTimeout(function() {
+        window.location.href = "confirmation.html";
+      }, 3000);
+    });
+    
+    /********* Prefill Data When Navigating Back *********/
+    function prefillData() {
+      // Step 1
+      document.querySelector(`input[name="bookingType"][value="${bookingData.bookingType}"]`).checked = true;
+      if (bookingData.bookingType === "group") {
+        document.getElementById('groupQuantityContainer').style.display = 'block';
+        document.getElementById('groupQuantity').value = bookingData.groupQuantity;
+      } else {
+        document.getElementById('groupQuantityContainer').style.display = 'none';
+      }
+      document.getElementById('currency').value = bookingData.currency;
+      updatePrice();
+      // Step 3: Client Details
+      document.getElementById('name').value = bookingData.name;
+      document.getElementById('email').value = bookingData.email;
+      document.getElementById('phone').value = bookingData.phone;
+    }
+    
+    // Prefill on page load (useful when navigating back)
+    prefillData();
   </script>
 </body>
 </html>
