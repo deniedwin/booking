@@ -27,11 +27,12 @@
       padding: 20px 20px 80px 20px; /* extra bottom padding so content isn't hidden */
       box-sizing: border-box;
       position: relative;
-      min-height: 550px; /* ensures all steps are the same size */
+      height: 550px; /* fixed height for uniformity */
     }
     /* Step containers */
     .step {
       display: none;
+      height: 100%;
     }
     .step.active {
       display: block;
@@ -59,14 +60,13 @@
       background: #fff;
       color: #000;
     }
-    /* Radio label: text on left, radio on right */
+    /* Radio label: text on left, radio on right in one line */
     .radio-label {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-top: 10px;
-      border: 1px solid transparent;
-      padding: 5px;
+      white-space: nowrap;
     }
     /* Navigation Buttons (fixed at bottom left of container) */
     .navigation {
@@ -346,7 +346,11 @@
             if (cellDate < currentDay) {
               cell.classList.add("disabled");
             } else {
-              if (cellDate.getDay() === 4 || cellDate.getDay() === 5 || cellDate.getDay() === 6) {
+              if (
+                cellDate.getDay() === 4 ||
+                cellDate.getDay() === 5 ||
+                cellDate.getDay() === 6
+              ) {
                 cell.classList.add("available");
                 cell.addEventListener("click", function () {
                   const prevSelected = calendarDiv.querySelectorAll("td.selected");
