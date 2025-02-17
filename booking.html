@@ -5,22 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Booking - Outdoor Rock Climbing</title>
   <style>
-    /* Global Styles */
-    body {
-      font-family: Verdana, sans-serif;
+    /* Mobile-first brutalist design */
+    html, body {
+      margin: 0;
+      padding: 0;
       background: #fff;
       color: #000;
-      margin: 0;
-      padding: 20px;
+      font-family: Verdana, sans-serif;
+      /* Center container horizontally and vertically */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
     }
+    /* Container: full width on mobile; fixed max-width on larger screens */
     .container {
-      max-width: 600px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: 360px;  /* Mobile-like width for all devices */
+      margin: 20px;
       border: 1px solid #000;
       padding: 20px;
+      box-sizing: border-box;
       position: relative;
-      min-height: 400px;
+      min-height: 550px; /* Ensures all steps are same size */
     }
+    /* Step containers */
     .step {
       display: none;
     }
@@ -61,6 +70,7 @@
     .calendar-container {
       margin-top: 10px;
       text-align: center;
+      overflow-x: auto;
     }
     .calendar-container table {
       width: 100%;
@@ -73,6 +83,7 @@
       width: 14%;
       height: 40px;
       text-align: center;
+      box-sizing: border-box;
     }
     .calendar-container td.available {
       cursor: pointer;
@@ -195,6 +206,7 @@
         step.classList.remove('active');
       });
       document.getElementById('step' + stepNumber).classList.add('active');
+      prefillData();
     }
     
     /********* Step 1: Booking Type & Currency *********/
@@ -430,7 +442,7 @@
       document.getElementById('phone').value = bookingData.phone;
     }
     
-    // Prefill on page load (useful when navigating back)
+    // Prefill on initial load
     prefillData();
   </script>
 </body>
