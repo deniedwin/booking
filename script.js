@@ -85,7 +85,6 @@ function getBookingData() {
       updatePrice();
     });
     document.getElementById("next1").addEventListener("click", function() {
-      // Proceed to Step 2
       window.location.href = "booking-timedate.html";
     });
   }
@@ -102,13 +101,11 @@ function getBookingData() {
       window.location.href = "booking-type.html";
     });
     document.getElementById("next2").addEventListener("click", function() {
-      // Ensure a date is selected
       const d = getBookingData();
       if (!d.selectedDate) {
         alert("Please select a valid date.");
         return;
       }
-      // Save time slot
       d.timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
       saveBookingData(d);
       window.location.href = "booking-details.html";
@@ -116,7 +113,7 @@ function getBookingData() {
     generateCalendar();
   }
   
-  // Calendar generation (used in Step 2)
+  // Calendar generation for Step 2
   function generateCalendar() {
     const calendarDiv = document.getElementById("calendar");
     if (!calendarDiv) return;
@@ -124,25 +121,39 @@ function getBookingData() {
     const today = new Date();
     let currentMonth = today.getMonth();
     let currentYear = today.getFullYear();
-  
-    // Header with month navigation
+    
+    // Create header with month navigation
     const headerDiv = document.createElement("div");
+    headerDiv.style.display = "flex";
+    headerDiv.style.alignItems = "center";
+    headerDiv.style.justifyContent = "center";
+    headerDiv.style.gap = "5px";
+    
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "<";
+    prevBtn.style.fontSize = "14px";
+    prevBtn.style.padding = "2px 5px";
     prevBtn.addEventListener("click", function() {
       if (currentMonth === 0) { currentMonth = 11; currentYear--; }
       else { currentMonth--; }
       generateCalendarFor(currentMonth, currentYear);
+      monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
     });
+    
+    const monthYearSpan = document.createElement("span");
+    monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
+    
     const nextBtn = document.createElement("button");
     nextBtn.textContent = ">";
+    nextBtn.style.fontSize = "14px";
+    nextBtn.style.padding = "2px 5px";
     nextBtn.addEventListener("click", function() {
       if (currentMonth === 11) { currentMonth = 0; currentYear++; }
       else { currentMonth++; }
       generateCalendarFor(currentMonth, currentYear);
+      monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
     });
-    const monthYearSpan = document.createElement("span");
-    monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
+    
     headerDiv.appendChild(prevBtn);
     headerDiv.appendChild(monthYearSpan);
     headerDiv.appendChild(nextBtn);
@@ -152,9 +163,9 @@ function getBookingData() {
   
   function generateCalendarFor(month, year) {
     const calendarDiv = document.getElementById("calendar");
-    // Remove existing table if any
     const existingTable = calendarDiv.querySelector("table");
     if (existingTable) calendarDiv.removeChild(existingTable);
+    
     const table = document.createElement("table");
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -165,13 +176,14 @@ function getBookingData() {
     });
     thead.appendChild(headerRow);
     table.appendChild(thead);
-  
+    
     const tbody = document.createElement("tbody");
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     let date = 1;
     const currentDay = new Date();
     currentDay.setHours(0,0,0,0);
+    
     for (let i = 0; i < 6; i++) {
       const row = document.createElement("tr");
       for (let j = 0; j < 7; j++) {
@@ -186,7 +198,6 @@ function getBookingData() {
           if (cellDate < currentDay) {
             cell.classList.add("disabled");
           } else {
-            // Allow only Thursday (4), Friday (5), and Saturday (6)
             if ([4,5,6].includes(cellDate.getDay())) {
               cell.classList.add("available");
               cell.addEventListener("click", function() {
@@ -214,7 +225,6 @@ function getBookingData() {
   // --- Step 3: Client Details ---
   function initStep3() {
     const data = getBookingData();
-    // Prefill fields if data exists
     if (data.name) document.getElementById("name").value = data.name;
     if (data.email) document.getElementById("email").value = data.email;
     if (data.phone) document.getElementById("phone").value = data.phone;
@@ -230,7 +240,6 @@ function getBookingData() {
         alert("Please fill in all client details.");
         return;
       }
-      // Simple email format check
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(email)) {
         alert("Please enter a valid email address.");
@@ -262,11 +271,7 @@ function getBookingData() {
       window.location.href = "booking-details.html";
     });
     document.getElementById("pay").addEventListener("click", function() {
-      // Simulate payment processing (e.g., show modal or alert)
-      alert("simulating payment processing, please wait");
-      setTimeout(function() {
-        window.location.href = "confirmation.html";
-      }, 3000);
+      window.location.href = "processing.html";
     });
   }
   
