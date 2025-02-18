@@ -7,29 +7,21 @@
                  user-scalable=no, 
                  initial-scale=1.0, 
                  maximum-scale=1.0">
-  <title>Booking - Step 3</title>
+  <title>Payment Success</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body>
+<body onload="showSuccess()">
   <div class="container">
-    <div class="title">Step 3: Your Info</div>
-    <div class="content leftAlign">
-      <form onsubmit="event.preventDefault(); submitUserInfo();">
-        <label for="name">Name</label>
-        <input type="text" id="name" required>
-
-        <label for="email">Email</label>
-        <input type="email" id="email" required>
-
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" required>
-
-        <button type="submit">Next</button>
-      </form>
+    <div class="title">Payment Successful</div>
+    <div class="content">
+      <p>Your payment was successful!</p>
+      <p>Order ID: <strong id="orderId"></strong></p>
+      <p>Please check your email for booking confirmation.</p>
+      <button onclick="window.location.href='index.html'">Done</button>
     </div>
     <div class="footer">
-      <a href="booking-step2.html">Back</a>
+      <a href="index.html">Home</a>
     </div>
   </div>
   <hr class="beneath-footer">

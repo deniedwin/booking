@@ -41,18 +41,29 @@ function selectProductCurrency() {
 
 // On Step2: gather date/time
 function selectDateTime() {
-  const daySelect = document.getElementById("day");
-  const timeSelect = document.getElementById("time");
-  const day = daySelect.value;
-  const time = timeSelect.value;
+  const dateInput = document.getElementById("dateInput").value;
+  const sunrise = document.getElementById("sunrise").checked;
+  const sunset = document.getElementById("sunset").checked;
 
-  if (!day || !time) {
-    alert("Please select a valid day and time.");
+  if (!dateInput || (!sunrise && !sunset)) {
+    alert("Please select a valid date and time slot.");
     return;
   }
 
-  setBookingData("day", day);
-  setBookingData("time", time);
+  // Check if chosen date is Monday, Friday, or Saturday
+  const chosenDate = new Date(dateInput);
+  const dayOfWeek = chosenDate.getUTCDay(); 
+  // Sunday=0, Monday=1, Tuesday=2, ...
+  // We want 1 (Mon), 5 (Fri), or 6 (Sat)
+  if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
+    alert("Please select a Monday, Friday, or Saturday.");
+    return;
+  }
+
+  const timeSlot = sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)";
+
+  setBookingData("date", dateInput);
+  setBookingData("time", timeSlot);
 
   window.location.href = "booking-step3.html";
 }
@@ -80,16 +91,15 @@ function reviewBooking() {
   // Display data
   const product = getBookingData("product") || "";
   const currency = getBookingData("currency") || "";
-  const day = getBookingData("day") || "";
+  const date = getBookingData("date") || "";
   const time = getBookingData("time") || "";
   const name = getBookingData("name") || "";
   const email = getBookingData("email") || "";
   const phone = getBookingData("phone") || "";
 
-  // Insert these values into the page (if we have placeholders)
   document.getElementById("review-product").innerText = product;
   document.getElementById("review-currency").innerText = currency;
-  document.getElementById("review-day").innerText = day;
+  document.getElementById("review-date").innerText = date;
   document.getElementById("review-time").innerText = time;
   document.getElementById("review-name").innerText = name;
   document.getElementById("review-email").innerText = email;
@@ -100,7 +110,7 @@ function confirmBooking() {
   // Check disclaimers
   const disclaimersChecked = document.getElementById("disclaimerCheck").checked;
   if (!disclaimersChecked) {
-    alert("You must check the waiver and terms to proceed.");
+    alert("You must check the waiver, terms, and conditions to proceed.");
     return;
   }
   // Generate order ID
@@ -111,12 +121,19 @@ function confirmBooking() {
   window.location.href = "booking-payment.html";
 }
 
-// Payment page: show final success
+// Payment page: show final success after simulating
 function simulatePayment() {
+  // Show message, then redirect after short delay
+  setTimeout(() => {
+    window.location.href = "booking-success.html";
+  }, 2000);
+}
+
+// Booking Success: display orderId
+function showSuccess() {
   const orderId = getBookingData("orderId");
-  if (orderId) {
-    document.getElementById("orderId").innerText = orderId;
-  } else {
-    document.getElementById("orderId").innerText = "N/A";
+  const orderIdSpan = document.getElementById("orderId");
+  if (orderId && orderIdSpan) {
+    orderIdSpan.innerText = orderId;
   }
 }

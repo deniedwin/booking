@@ -14,32 +14,31 @@
 <body>
   <div class="container">
     <div class="title">Step 2: Choose Date & Time</div>
-    <div class="content">
+    <div class="content leftAlign">
       <form onsubmit="event.preventDefault(); selectDateTime();">
-        <label for="day">Available days:</label>
-        <select id="day">
-          <option value="">-- select --</option>
-          <option value="Monday">Monday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-        </select>
+        <label for="dateInput">Select a date (Mon/Fri/Sat only):</label>
+        <input type="date" id="dateInput">
 
-        <label for="time">Time slots:</label>
-        <select id="time">
-          <option value="">-- select --</option>
-          <option value="Sunrise (5-8am)">Sunrise (5-8am)</option>
-          <option value="Sunset (4-7pm)">Sunset (4-7pm)</option>
-        </select>
-        
+        <p><strong>Choose a time slot:</strong></p>
+        <label>
+          <input type="radio" id="sunrise" name="timeSlot">
+          Sunrise (5-8am)
+        </label>
+        <label>
+          <input type="radio" id="sunset" name="timeSlot">
+          Sunset (4-7pm)
+        </label>
+
         <button type="submit">Next</button>
       </form>
     </div>
     <div class="footer">
       <a href="booking-step1.html">Back</a>
     </div>
-    <div class="beneath-footer">
-      klif curacao nv is the operational company and klif ireland ltd is only the payment processor commission agent
-    </div>
+  </div>
+  <hr class="beneath-footer">
+  <div class="beneath-footer">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.
   </div>
 </body>
 </html>

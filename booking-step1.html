@@ -14,25 +14,26 @@
 <body>
   <div class="container">
     <div class="title">Step 1: Choose Product & Currency</div>
-    <div class="content">
+    <!-- leftAlign to push text to the left -->
+    <div class="content leftAlign">
       <form onsubmit="event.preventDefault(); selectProductCurrency();">
         <p><strong>Products:</strong></p>
         <label>
-          <input type="radio" name="product" value="Single Tour ($100 / €96)" />
-          Single Tour
+          <input type="radio" name="product" value="Single Tour ($100 / €96)">
+          Single Tour ($100 / €96)
         </label>
         <label>
-          <input type="radio" name="product" value="Group Tour ($90 / €86)" />
-          Group Tour (3+ people)
+          <input type="radio" name="product" value="Group Tour ($90 / €86)">
+          Group Tour ($90 / €86) - 3 or more participants
         </label>
 
         <p><strong>Currency:</strong></p>
         <label>
-          <input type="radio" name="currency" value="USD" />
+          <input type="radio" name="currency" value="USD">
           USD
         </label>
         <label>
-          <input type="radio" name="currency" value="EUR" />
+          <input type="radio" name="currency" value="EUR">
           EUR
         </label>
         
@@ -43,9 +44,10 @@
       <a href="index.html">Home</a>
       <a href="booking-step1.html">Booking</a>
     </div>
-    <div class="beneath-footer">
-      klif curacao nv is the operational company and klif ireland ltd is only the payment processor commission agent
-    </div>
+  </div>
+  <hr class="beneath-footer">
+  <div class="beneath-footer">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.
   </div>
 </body>
 </html>
