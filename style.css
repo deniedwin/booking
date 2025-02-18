@@ -2,67 +2,90 @@
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
   height: 100%;
   background: #fff;
   color: #000;
   font-family: Arial, sans-serif;
+  /* Slightly smaller default font to help fit on small screens */
+  font-size: 14px;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Container for full screen */
+/* 
+  We use a vertical split:
+  - .container at 90vh
+  - .beneath-footer at 10vh
+  Total: 100vh => no scrolling
+*/
 .container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 600px;
+  height: 90vh; /* occupy 90% of the viewport height */
+  margin: 0 auto; /* center horizontally */
+  padding: 0.5rem; /* minimal internal padding */
+  border: 2px solid #000; /* Brutalist black frame */
+  
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* center vertically */
-  align-items: center;      /* center horizontally */
-  height: 100vh;
-  max-width: 600px;
-  margin: 1rem auto;         /* margin around the box so we see edges */
-  padding: 1rem;             /* padding inside the box */
+  justify-content: space-between; /* space between header/content/footer */
+  align-items: center;
+}
+
+/* 
+  The note at the bottom is a separate element 
+  outside .container, occupying the remaining 10vh
+*/
+.beneath-footer {
   box-sizing: border-box;
-  border: 2px solid #000;   /* Brutalist "frame" look */
-}
-
-/* Prevent iOS from zooming on form inputs */
-input, select {
-  font-size: 16px;
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-  text-transform: uppercase;
   width: 100%;
+  max-width: 600px;
+  height: 10vh; /* takes the remaining 10% of screen height */
+  margin: 0 auto; /* center horizontally */
+  border-top: 2px solid #000;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  padding: 0 0.5rem; 
+  font-size: 0.75rem; /* smaller text for disclaimers */
+  color: #444;
+}
+
+/* Title at the top */
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+  text-transform: uppercase;
   text-align: center;
 }
 
+/* Content (middle area) grows to fill leftover space */
 .content {
   flex: 1;
   width: 100%;
   box-sizing: border-box;
-  /* By default center text, can override with .leftAlign */
-  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  /* Center by default; can override with .leftAlign */
+  text-align: center;
 }
 
-/* Utility class for left alignment */
+/* For left-aligned content */
 .leftAlign {
+  align-items: flex-start;
   text-align: left;
-  align-items: flex-start; /* for the container's flex alignment */
 }
 
+/* Footer at the bottom inside .container */
 .footer {
-  margin-top: 1rem;
   border-top: 2px solid #000;
   width: 100%;
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
   display: flex;
   justify-content: space-around;
 }
@@ -71,30 +94,20 @@ input, select {
   text-decoration: none;
   color: #000;
   font-weight: bold;
+  font-size: 0.8rem; /* slightly smaller in footer */
 }
 
-/* The note beneath the container, separated by a line */
-.beneath-footer {
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto 1rem auto;
-  box-sizing: border-box;
-  padding: 0 1rem;
-  font-size: 0.8rem;
-  color: #444;
-}
-
-/* Simple brutalist button style */
+/* Buttons */
 button, .btn {
   background: #000;
   color: #fff;
-  padding: 0.5rem 1rem;
+  padding: 0.4rem 0.8rem;
   border: 2px solid #000;
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 1rem;
-  margin: 0.25rem;
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
 }
 
 button:hover, .btn:hover {
@@ -102,36 +115,44 @@ button:hover, .btn:hover {
   color: #000;
 }
 
-/* Minimal styling for forms */
+/* Form styles */
 form {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* left align form items by default */
-  margin-top: 1rem;
+  align-items: flex-start; /* left align form fields by default */
+  width: 100%;
 }
 
 label {
   font-weight: bold;
-  margin: 0.5rem 0 0.25rem;
+  margin: 0.25rem 0 0.1rem;
+  font-size: 0.85rem;
 }
 
 input[type=text],
 input[type=email],
 input[type=tel],
 input[type=date] {
-  width: 80%;
-  padding: 0.25rem;
+  width: 90%;
+  padding: 0.3rem;
   margin-bottom: 0.5rem;
   border: 2px solid #000;
   background: #fff;
   color: #000;
+  font-size: 0.8rem;
 }
 
 select {
-  width: 84%;
-  padding: 0.25rem;
+  width: 90%;
+  padding: 0.3rem;
   margin-bottom: 0.5rem;
   border: 2px solid #000;
   background: #fff;
   color: #000;
+  font-size: 0.8rem;
+}
+
+/* Prevent iOS from zooming on form inputs */
+input, select {
+  font-size: 16px;
 }
