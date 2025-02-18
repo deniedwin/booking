@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, 
+                 user-scalable=no, 
+                 initial-scale=1.0, 
+                 maximum-scale=1.0">
+  <title>Booking - Review</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body onload="reviewBooking()">
+  <div class="container">
+    <div class="title">Step 4: Review & Confirm</div>
+    <div class="content">
+      <p><strong>Product:</strong> <span id="review-product"></span></p>
+      <p><strong>Currency:</strong> <span id="review-currency"></span></p>
+      <p><strong>Day:</strong> <span id="review-day"></span></p>
+      <p><strong>Time:</strong> <span id="review-time"></span></p>
+      <p><strong>Name:</strong> <span id="review-name"></span></p>
+      <p><strong>Email:</strong> <span id="review-email"></span></p>
+      <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+
+      <p>Please confirm you have read our <a href="disclaimers.html" target="_blank">waiver, terms, and conditions</a>.</p>
+      <label>
+        <input type="checkbox" id="disclaimerCheck"> I agree to the terms & disclaimers
+      </label>
+
+      <button onclick="confirmBooking()">Pay</button>
+    </div>
+    <div class="footer">
+      <a href="booking-step3.html">Back</a>
+    </div>
+    <div class="beneath-footer">
+      klif curacao nv is the operational company and klif ireland ltd is only the payment processor commission agent
+    </div>
+  </div>
+</body>
+</html>

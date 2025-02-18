@@ -1,143 +1,119 @@
-/* Global Styles */
+/* style.css */
 html, body {
-    margin: 0;
-    padding: 0;
-    background: #fff;
-    color: #000;
-    font-family: Verdana, sans-serif;
-  }
-  
-  .container {
-    width: 100%;
-    max-width: 360px;
-    height: 550px;
-    margin: 20px;
-    border: 3px solid #000;
-    padding: 20px 20px 80px 20px; /* reserve bottom space for navigation */
-    box-sizing: border-box;
-    position: relative;
-  }
-  
-  h1, h2, p {
-    text-align: center;
-    margin-top: 0;
-  }
-  
-  a.button {
-    display: inline-block;
-    padding: 10px 20px;
-    text-decoration: none;
-    border: 3px solid #000;
-    color: #000;
-    margin-top: 20px;
-  }
-  
-  label {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  input, select, button {
-    font-size: 16px;
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
-  }
-  
-  .radio-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-    white-space: nowrap;
-  }
-  
-  /* Navigation */
-  .navigation {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-  }
-  
-  .navigation button,
-  .navigation .nav-button {
-    display: inline-block;
-    width: 80px;
-    height: 40px;
-    margin-left: 10px;
-    border: 1px solid #000;
-    background: #fff;
-    color: #000;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-    line-height: 40px;
-  }
-  
-  /* Calendar Container */
-  .calendar-container {
-    margin-top: 10px;
-    text-align: center;
-    overflow-x: auto;
-    height: 250px; /* fixed height so calendar doesn’t overlap navigation */
-  }
-  
-  /* Calendar Table */
-  .calendar-container table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .calendar-container th,
-  .calendar-container td {
-    border: 1px solid #000;
-    padding: 5px;
-    width: 14%;
-    height: 40px;
-    text-align: center;
-    box-sizing: border-box;
-  }
-  
-  .calendar-container td.available {
-    cursor: pointer;
-  }
-  
-  .calendar-container td.selected {
-    background: #000;
-    color: #fff;
-  }
-  
-  .calendar-container td.disabled {
-    color: #aaa;
-  }
-  
-  /* Calendar Header (for month navigation) */
-  .calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-  }
-  .calendar-header button {
-    font-size: 14px;
-    padding: 2px 5px;
-  }
-  
-  /* Review Table (Step 4) */
-  .review-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .review-table td {
-    padding: 5px;
-    text-align: left;
-  }
-  .review-table td:first-child {
-    font-weight: bold;
-    width: 40%;
-  }
-  
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #fff;
+  color: #000;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Prevent iOS from zooming on form inputs */
+input, select {
+  font-size: 16px;
+}
+
+/* Container for full screen */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  max-width: 600px; /* wide enough for bigger screens, but still center on desktop */
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0 1rem; /* minimal horizontal padding */
+  border: 2px solid #000; /* Brutalist "frame" look */
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.footer {
+  margin-top: 1rem;
+  border-top: 2px solid #000;
+  width: 100%;
+  padding-top: 0.5rem;
+  display: flex;
+  justify-content: space-around;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+}
+
+.beneath-footer {
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: #444;
+}
+
+/* Simple brutalist button style */
+button, .btn {
+  background: #000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border: 2px solid #000;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0.25rem;
+}
+
+button:hover, .btn:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* Minimal styling for forms */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type=text],
+input[type=email],
+input[type=tel] {
+  width: 80%;
+  padding: 0.25rem;
+  margin: 0.25rem 0;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+}
+
+select {
+  width: 84%;
+  padding: 0.25rem;
+  margin: 0.25rem 0;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+}
+
+label {
+  font-weight: bold;
+  margin: 0.5rem 0 0.25rem;
+}

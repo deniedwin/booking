@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, 
                  user-scalable=no, 
                  initial-scale=1.0, 
                  maximum-scale=1.0">
-  <title>klif - Home</title>
+  <title>Payment</title>
   <link rel="stylesheet" href="style.css">
-  <!-- script.js included if needed for any global usage -->
   <script src="script.js"></script>
 </head>
-<body>
+<body onload="simulatePayment()">
   <div class="container">
-    <div class="title">klif</div>
+    <div class="title">Payment Processing</div>
     <div class="content">
-      <p>Welcome to klif, your go-to outdoor rock climbing experience.</p>
-      <p>We offer professional guided climbs with certified NKBV Dutch rock climbers.</p>
-      <button onclick="window.location.href='booking-step1.html'">Book Now</button>
+      <p>Simulating Stripe / Adyen / Mollie checkout...</p>
+      <p>Your order ID: <strong id="orderId"></strong></p>
+      <p>Payment successful! Check your email for confirmation.</p>
+      <button onclick="window.location.href='index.html'">Done</button>
     </div>
     <div class="footer">
-      <a href="about.html">About</a>
-      <a href="booking-step1.html">Booking</a>
-      <a href="contact.html">Contact</a>
-      <a href="faq.html">FAQ</a>
-      <a href="news.html">News</a>
+      <a href="index.html">Home</a>
     </div>
     <div class="beneath-footer">
       klif curacao nv is the operational company and klif ireland ltd is only the payment processor commission agent

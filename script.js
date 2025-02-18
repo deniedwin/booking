@@ -1,276 +1,122 @@
-// Utility functions for state persistence using localStorage
-function getBookingData() {
-    return JSON.parse(localStorage.getItem("bookingData")) || {
-      bookingType: "single",
-      groupQuantity: 1,
-      currency: "USD",
-      price: 100,
-      selectedDate: "",
-      timeSlot: "sunrise",
-      name: "",
-      email: "",
-      phone: ""
-    };
+// script.js
+
+// Store booking data in localStorage
+function setBookingData(key, value) {
+  localStorage.setItem(key, value);
+}
+
+function getBookingData(key) {
+  return localStorage.getItem(key);
+}
+
+// Generate an order ID with prefix date/time in yyyymmddhhmmss format
+function generateOrderId() {
+  const now = new Date();
+  // Format: YYYYMMDDHHMMSS
+  const year = now.getFullYear().toString();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  return year + month + day + hours + minutes + seconds;
+}
+
+// On Step1: gather product & currency
+function selectProductCurrency() {
+  const product = document.querySelector('input[name="product"]:checked');
+  const currency = document.querySelector('input[name="currency"]:checked');
+
+  if (!product || !currency) {
+    alert("Please choose both product and currency.");
+    return;
   }
-  
-  function saveBookingData(data) {
-    localStorage.setItem("bookingData", JSON.stringify(data));
+
+  setBookingData("product", product.value);
+  setBookingData("currency", currency.value);
+
+  // Move to next step
+  window.location.href = "booking-step2.html";
+}
+
+// On Step2: gather date/time
+function selectDateTime() {
+  const daySelect = document.getElementById("day");
+  const timeSelect = document.getElementById("time");
+  const day = daySelect.value;
+  const time = timeSelect.value;
+
+  if (!day || !time) {
+    alert("Please select a valid day and time.");
+    return;
   }
-  
-  // Update price based on booking type, quantity, and currency
-  function updatePrice() {
-    const data = getBookingData();
-    const pricing = {
-      single: { USD: 100, EUR: 96 },
-      group: { USD: 90, EUR: 86 }
-    };
-    let price = data.bookingType === "single"
-      ? pricing.single[data.currency]
-      : pricing.group[data.currency] * data.groupQuantity;
-    data.price = price;
-    saveBookingData(data);
-    const priceDisplay = document.getElementById("priceDisplay");
-    if (priceDisplay) {
-      priceDisplay.textContent = "Price: " + data.currency + " " + price;
-    }
+
+  setBookingData("day", day);
+  setBookingData("time", time);
+
+  window.location.href = "booking-step3.html";
+}
+
+// On Step3: gather user info
+function submitUserInfo() {
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+
+  if (!name || !email || !phone) {
+    alert("Please fill in all fields.");
+    return;
   }
-  
-  // --- Step 1: Booking Type & Currency ---
-  function initStep1() {
-    const data = getBookingData();
-    // Set booking type radio button
-    const radios = document.getElementsByName("bookingType");
-    radios.forEach(radio => {
-      radio.checked = (radio.value === data.bookingType);
-    });
-    // Show/hide group quantity
-    const groupContainer = document.getElementById("groupQuantityContainer");
-    if (data.bookingType === "group") {
-      groupContainer.style.display = "block";
-      document.getElementById("groupQuantity").value = data.groupQuantity;
-    } else {
-      groupContainer.style.display = "none";
-    }
-    // Set currency
-    document.getElementById("currency").value = data.currency;
-    updatePrice();
-  
-    // Add event listeners
-    document.querySelectorAll('input[name="bookingType"]').forEach(radio => {
-      radio.addEventListener("change", function() {
-        const d = getBookingData();
-        d.bookingType = this.value;
-        saveBookingData(d);
-        groupContainer.style.display = (this.value === "group") ? "block" : "none";
-        updatePrice();
-      });
-    });
-    document.getElementById("groupQuantity").addEventListener("input", function() {
-      const d = getBookingData();
-      d.groupQuantity = parseInt(this.value) || 1;
-      saveBookingData(d);
-      updatePrice();
-    });
-    document.getElementById("currency").addEventListener("change", function() {
-      const d = getBookingData();
-      d.currency = this.value;
-      saveBookingData(d);
-      updatePrice();
-    });
-    document.getElementById("next1").addEventListener("click", function() {
-      window.location.href = "booking-timedate.html";
-    });
+
+  setBookingData("name", name);
+  setBookingData("email", email);
+  setBookingData("phone", phone);
+
+  window.location.href = "booking-step4.html";
+}
+
+// On Step4: review data, confirm disclaimers, then proceed to pay
+function reviewBooking() {
+  // Display data
+  const product = getBookingData("product") || "";
+  const currency = getBookingData("currency") || "";
+  const day = getBookingData("day") || "";
+  const time = getBookingData("time") || "";
+  const name = getBookingData("name") || "";
+  const email = getBookingData("email") || "";
+  const phone = getBookingData("phone") || "";
+
+  // Insert these values into the page (if we have placeholders)
+  document.getElementById("review-product").innerText = product;
+  document.getElementById("review-currency").innerText = currency;
+  document.getElementById("review-day").innerText = day;
+  document.getElementById("review-time").innerText = time;
+  document.getElementById("review-name").innerText = name;
+  document.getElementById("review-email").innerText = email;
+  document.getElementById("review-phone").innerText = phone;
+}
+
+function confirmBooking() {
+  // Check disclaimers
+  const disclaimersChecked = document.getElementById("disclaimerCheck").checked;
+  if (!disclaimersChecked) {
+    alert("You must check the waiver and terms to proceed.");
+    return;
   }
-  
-  // --- Step 2: Time Slot & Date ---
-  function initStep2() {
-    const data = getBookingData();
-    // Set time slot radio button
-    const timeRadios = document.getElementsByName("timeSlot");
-    timeRadios.forEach(radio => {
-      radio.checked = (radio.value === data.timeSlot);
-    });
-    document.getElementById("back2").addEventListener("click", function() {
-      window.location.href = "booking-type.html";
-    });
-    document.getElementById("next2").addEventListener("click", function() {
-      const d = getBookingData();
-      if (!d.selectedDate) {
-        alert("Please select a valid date.");
-        return;
-      }
-      d.timeSlot = document.querySelector('input[name="timeSlot"]:checked').value;
-      saveBookingData(d);
-      window.location.href = "booking-details.html";
-    });
-    generateCalendar();
+  // Generate order ID
+  const orderId = generateOrderId();
+  setBookingData("orderId", orderId);
+
+  // Go to payment simulation
+  window.location.href = "booking-payment.html";
+}
+
+// Payment page: show final success
+function simulatePayment() {
+  const orderId = getBookingData("orderId");
+  if (orderId) {
+    document.getElementById("orderId").innerText = orderId;
+  } else {
+    document.getElementById("orderId").innerText = "N/A";
   }
-  
-  // Calendar generation for Step 2
-  function generateCalendar() {
-    const calendarDiv = document.getElementById("calendar");
-    if (!calendarDiv) return;
-    calendarDiv.innerHTML = "";
-    const today = new Date();
-    let currentMonth = today.getMonth();
-    let currentYear = today.getFullYear();
-    
-    // Create header with month navigation
-    const headerDiv = document.createElement("div");
-    headerDiv.className = "calendar-header";
-    
-    const prevBtn = document.createElement("button");
-    prevBtn.textContent = "<";
-    prevBtn.addEventListener("click", function() {
-      if (currentMonth === 0) { currentMonth = 11; currentYear--; }
-      else { currentMonth--; }
-      generateCalendarFor(currentMonth, currentYear);
-      monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
-    });
-    
-    const monthYearSpan = document.createElement("span");
-    monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
-    
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = ">";
-    nextBtn.addEventListener("click", function() {
-      if (currentMonth === 11) { currentMonth = 0; currentYear++; }
-      else { currentMonth++; }
-      generateCalendarFor(currentMonth, currentYear);
-      monthYearSpan.textContent = " " + new Date(currentYear, currentMonth).toLocaleString("default", { month: "long", year: "numeric" }) + " ";
-    });
-    
-    headerDiv.appendChild(prevBtn);
-    headerDiv.appendChild(monthYearSpan);
-    headerDiv.appendChild(nextBtn);
-    calendarDiv.appendChild(headerDiv);
-    
-    generateCalendarFor(currentMonth, currentYear);
-  }
-  
-  function generateCalendarFor(month, year) {
-    const calendarDiv = document.getElementById("calendar");
-    const existingTable = calendarDiv.querySelector("table");
-    if (existingTable) calendarDiv.removeChild(existingTable);
-    
-    const table = document.createElement("table");
-    const thead = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-    ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(day => {
-      const th = document.createElement("th");
-      th.textContent = day;
-      headerRow.appendChild(th);
-    });
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-    
-    const tbody = document.createElement("tbody");
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    let date = 1;
-    const currentDay = new Date();
-    currentDay.setHours(0,0,0,0);
-    
-    for (let i = 0; i < 6; i++) {
-      const row = document.createElement("tr");
-      for (let j = 0; j < 7; j++) {
-        const cell = document.createElement("td");
-        if (i === 0 && j < firstDay) {
-          cell.textContent = "";
-        } else if (date > daysInMonth) {
-          cell.textContent = "";
-        } else {
-          cell.textContent = date;
-          const cellDate = new Date(year, month, date);
-          if (cellDate < currentDay) {
-            cell.classList.add("disabled");
-          } else {
-            if ([4,5,6].includes(cellDate.getDay())) {
-              cell.classList.add("available");
-              cell.addEventListener("click", function() {
-                const prevSelected = calendarDiv.querySelectorAll("td.selected");
-                prevSelected.forEach(td => td.classList.remove("selected"));
-                cell.classList.add("selected");
-                const d = getBookingData();
-                d.selectedDate = cellDate.toISOString().split("T")[0];
-                saveBookingData(d);
-              });
-            } else {
-              cell.classList.add("disabled");
-            }
-          }
-          date++;
-        }
-        row.appendChild(cell);
-      }
-      tbody.appendChild(row);
-    }
-    table.appendChild(tbody);
-    calendarDiv.appendChild(table);
-  }
-  
-  // --- Step 3: Client Details ---
-  function initStep3() {
-    const data = getBookingData();
-    if (data.name) document.getElementById("name").value = data.name;
-    if (data.email) document.getElementById("email").value = data.email;
-    if (data.phone) document.getElementById("phone").value = data.phone;
-  
-    document.getElementById("back3").addEventListener("click", function() {
-      window.location.href = "booking-timedate.html";
-    });
-    document.getElementById("next3").addEventListener("click", function() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      if (!name || !email || !phone) {
-        alert("Please fill in all client details.");
-        return;
-      }
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        alert("Please enter a valid email address.");
-        return;
-      }
-      const d = getBookingData();
-      d.name = name; d.email = email; d.phone = phone;
-      saveBookingData(d);
-      window.location.href = "booking-review.html";
-    });
-  }
-  
-  // --- Step 4: Review & Pay ---
-  function initStep4() {
-    const data = getBookingData();
-    const reviewDiv = document.getElementById("reviewSummary");
-    let html = '<table class="review-table">';
-    html += '<tr><td>Booking Type:</td><td>' + (data.bookingType === "single" ? "Single Booking" : "Group Booking") + '</td></tr>';
-    if (data.bookingType === "group") {
-      html += '<tr><td>Group Quantity:</td><td>' + data.groupQuantity + '</td></tr>';
-    }
-    html += '<tr><td>Currency:</td><td>' + data.currency + '</td></tr>';
-    html += '<tr><td>Total Price:</td><td>' + data.currency + ' ' + data.price + '</td></tr>';
-    html += '<tr><td>Date:</td><td>' + data.selectedDate + '</td></tr>';
-    html += '<tr><td>Time Slot:</td><td>' + (data.timeSlot === "sunrise" ? "Sunrise (5-8am)" : "Sunset (4-7pm)") + '</td></tr>';
-    html += '<tr><td>Name:</td><td>' + data.name + '</td></tr>';
-    html += '<tr><td>Email:</td><td>' + data.email + '</td></tr>';
-    html += '<tr><td>Phone:</td><td>' + data.phone + '</td></tr>';
-    html += '</table>';
-    reviewDiv.innerHTML = html;
-    
-    document.getElementById("back4").addEventListener("click", function() {
-      window.location.href = "booking-details.html";
-    });
-    document.getElementById("pay").addEventListener("click", function() {
-      window.location.href = "processing.html";
-    });
-  }
-  
-  // Initialization: Call the appropriate function based on the page
-  document.addEventListener("DOMContentLoaded", function() {
-    if (document.getElementById("next1")) initStep1();
-    if (document.getElementById("next2")) initStep2();
-    if (document.getElementById("next3")) initStep3();
-    if (document.getElementById("pay")) initStep4();
-  });
-  
+}

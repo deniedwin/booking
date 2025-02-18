@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, 
+                 user-scalable=no, 
+                 initial-scale=1.0, 
+                 maximum-scale=1.0">
+  <title>Booking - Step 2</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Step 2: Choose Date & Time</div>
+    <div class="content">
+      <form onsubmit="event.preventDefault(); selectDateTime();">
+        <label for="day">Available days:</label>
+        <select id="day">
+          <option value="">-- select --</option>
+          <option value="Monday">Monday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+        </select>
+
+        <label for="time">Time slots:</label>
+        <select id="time">
+          <option value="">-- select --</option>
+          <option value="Sunrise (5-8am)">Sunrise (5-8am)</option>
+          <option value="Sunset (4-7pm)">Sunset (4-7pm)</option>
+        </select>
+        
+        <button type="submit">Next</button>
+      </form>
+    </div>
+    <div class="footer">
+      <a href="booking-step1.html">Back</a>
+    </div>
+    <div class="beneath-footer">
+      klif curacao nv is the operational company and klif ireland ltd is only the payment processor commission agent
+    </div>
+  </div>
+</body>
+</html>
