@@ -7,41 +7,45 @@ html, body {
   background: #fff;
   color: #000;
   font-family: Arial, sans-serif;
-  /* Slightly smaller default font to help fit on small screens */
-  font-size: 14px;
+  font-size: 14px; 
+}
+
+body {
+  /* So we can measure 100vh for reference if needed */
+  box-sizing: border-box;
 }
 
 /* 
-  We use a vertical split:
-  - .container at 90vh
-  - .beneath-footer at 10vh
-  Total: 100vh => no scrolling
+  We'll use 2vh top margin, 1vh bottom margin, 
+  container = 78vh, beneath-footer = 9vh. 
+  This sums to around 90vh. Some space remains 
+  for browser UI to avoid or reduce scrolling.
 */
 .container {
   box-sizing: border-box;
   width: 100%;
   max-width: 600px;
-  height: 90vh; /* occupy 90% of the viewport height */
-  margin: 0 auto; /* center horizontally */
-  padding: 0.5rem; /* minimal internal padding */
+  height: 78vh; 
+  margin: 2vh auto 1vh auto; /* top:2vh, bottom:1vh, auto left/right */
+  padding: 0.5rem;
   border: 2px solid #000; /* Brutalist black frame */
   
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* space between header/content/footer */
+  justify-content: space-between;
   align-items: center;
 }
 
 /* 
   The note at the bottom is a separate element 
-  outside .container, occupying the remaining 10vh
+  outside .container, ~9vh 
 */
 .beneath-footer {
   box-sizing: border-box;
   width: 100%;
   max-width: 600px;
-  height: 10vh; /* takes the remaining 10% of screen height */
-  margin: 0 auto; /* center horizontally */
+  height: 9vh; /* roughly 9% of screen height */
+  margin: 0 auto;
   border-top: 2px solid #000;
   
   display: flex;
@@ -49,21 +53,21 @@ html, body {
   justify-content: center;
   text-align: center;
 
-  padding: 0 0.5rem; 
-  font-size: 0.75rem; /* smaller text for disclaimers */
+  padding: 0 0.5rem;
+  font-size: 0.75rem;
   color: #444;
 }
 
-/* Title at the top */
+/* Title at the top inside .container */
 .title {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
-  margin: 0.5rem 0;
+  margin: 0.25rem 0;
   text-transform: uppercase;
   text-align: center;
 }
 
-/* Content (middle area) grows to fill leftover space */
+/* Middle area (content) grows to fill leftover space */
 .content {
   flex: 1;
   width: 100%;
@@ -71,17 +75,16 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* Center by default; can override with .leftAlign */
   text-align: center;
 }
 
-/* For left-aligned content */
+/* Left alignment utility */
 .leftAlign {
-  align-items: flex-start;
   text-align: left;
+  align-items: flex-start;
 }
 
-/* Footer at the bottom inside .container */
+/* Footer at bottom inside .container */
 .footer {
   border-top: 2px solid #000;
   width: 100%;
@@ -94,7 +97,7 @@ html, body {
   text-decoration: none;
   color: #000;
   font-weight: bold;
-  font-size: 0.8rem; /* slightly smaller in footer */
+  font-size: 0.75rem; 
 }
 
 /* Buttons */
@@ -106,7 +109,7 @@ button, .btn {
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   margin: 0.25rem 0;
 }
 
@@ -119,20 +122,21 @@ button:hover, .btn:hover {
 form {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* left align form fields by default */
+  align-items: flex-start; /* left align form fields */
   width: 100%;
 }
 
 label {
   font-weight: bold;
   margin: 0.25rem 0 0.1rem;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
 }
 
 input[type=text],
 input[type=email],
 input[type=tel],
-input[type=date] {
+input[type=date],
+input[type=number] {
   width: 90%;
   padding: 0.3rem;
   margin-bottom: 0.5rem;

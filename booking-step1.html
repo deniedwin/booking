@@ -3,39 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, 
-                 user-scalable=no, 
-                 initial-scale=1.0, 
+        content="width=device-width, initial-scale=1.0,
+                 user-scalable=no,
                  maximum-scale=1.0">
   <title>Booking - Step 1</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body>
+<body onload="toggleTicketsInput()">
   <div class="container">
-    <div class="title">Step 1: Product & Currency</div>
+    <div class="title">Step 1: Choose Product</div>
     <div class="content leftAlign">
-      <form onsubmit="event.preventDefault(); selectProductCurrency();">
+      <form onsubmit="event.preventDefault(); selectProduct();">
         <p><strong>Products:</strong></p>
         <label>
-          <input type="radio" name="product" value="Single Tour ($100 / €96)">
+          <input type="radio" id="singleTour" name="product" value="SingleTour" onclick="toggleTicketsInput()">
           Single Tour ($100 / €96)
         </label>
         <label>
-          <input type="radio" name="product" value="Group Tour ($90 / €86)">
+          <input type="radio" id="groupTour" name="product" value="GroupTour" onclick="toggleTicketsInput()">
           Group Tour ($90 / €86) - 3+ participants
         </label>
 
-        <p><strong>Currency:</strong></p>
-        <label>
-          <input type="radio" name="currency" value="USD">
-          USD
-        </label>
-        <label>
-          <input type="radio" name="currency" value="EUR">
-          EUR
-        </label>
-        
+        <!-- Hidden by default, appears if Group Tour is checked -->
+        <div id="ticketsField" style="display:none; margin-top:0.5rem;">
+          <label for="tickets">Number of Tickets (3+):</label>
+          <input type="number" id="tickets" value="3" min="3">
+        </div>
+
         <button type="submit">Next</button>
       </form>
     </div>
@@ -45,7 +40,8 @@
     </div>
   </div>
   <div class="beneath-footer">
-    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.
   </div>
 </body>
 </html>

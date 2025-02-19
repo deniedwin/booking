@@ -22,53 +22,90 @@ function generateOrderId() {
   return year + month + day + hours + minutes + seconds;
 }
 
-// On Step1: gather product & currency
-function selectProductCurrency() {
-  const product = document.querySelector('input[name="product"]:checked');
-  const currency = document.querySelector('input[name="currency"]:checked');
+// Toggle tickets input if Group Tour is selected
+function toggleTicketsInput() {
+  const groupRadio = document.getElementById("groupTour");
+  const ticketsField = document.getElementById("ticketsField");
 
-  if (!product || !currency) {
-    alert("Please choose both product and currency.");
+  if (groupRadio && groupRadio.checked) {
+    ticketsField.style.display = "block";
+  } else {
+    ticketsField.style.display = "none";
+  }
+}
+
+// Step 1: gather product & # of tickets (if group)
+function selectProduct() {
+  const singleRadio = document.getElementById("singleTour");
+  const groupRadio = document.getElementById("groupTour");
+  let product = "";
+
+  if (singleRadio.checked) {
+    product = "Single Tour ($100 / €96)";
+    setBookingData("tickets", "1-2"); 
+  } else if (groupRadio.checked) {
+    product = "Group Tour ($90 / €86)";
+    
+    // Retrieve number of tickets
+    const ticketsInput = document.getElementById("tickets");
+    const numTickets = ticketsInput.value.trim();
+    // At least 3
+    if (parseInt(numTickets) < 3) {
+      alert("Group must be 3 or more participants.");
+      return;
+    }
+    setBookingData("tickets", numTickets);
+  } else {
+    alert("Please choose a product.");
     return;
   }
 
-  setBookingData("product", product.value);
-  setBookingData("currency", currency.value);
+  setBookingData("product", product);
 
-  // Move to next step
+  // Move to step 2
   window.location.href = "booking-step2.html";
 }
 
-// On Step2: gather date/time
+// Step 2: Only allow Mon/Fri/Sat
+function validateDate() {
+  const dateInput = document.getElementById("dateInput");
+  const chosenDate = dateInput.value;
+  if (!chosenDate) return; // No date chosen yet
+
+  const dateObj = new Date(chosenDate + "T00:00:00"); 
+  // T00:00:00 to ensure correct day in local time
+  
+  // Sunday=0, Monday=1, Tuesday=2, Wed=3, Thu=4, Fri=5, Sat=6
+  const dayOfWeek = dateObj.getUTCDay();
+  if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
+    alert("Please select a Monday, Friday, or Saturday.");
+    dateInput.value = ""; // reset invalid date
+  }
+}
+
 function selectDateTime() {
-  const dateInput = document.getElementById("dateInput").value;
+  const dateInput = document.getElementById("dateInput");
   const sunrise = document.getElementById("sunrise").checked;
   const sunset = document.getElementById("sunset").checked;
 
-  if (!dateInput || (!sunrise && !sunset)) {
-    alert("Please select a valid date and time slot.");
+  if (!dateInput.value) {
+    alert("Please select a valid date.");
     return;
   }
-
-  // Check if chosen date is Monday, Friday, or Saturday
-  const chosenDate = new Date(dateInput);
-  const dayOfWeek = chosenDate.getUTCDay(); 
-  // Sunday=0, Monday=1, Tuesday=2, ...
-  // We want 1 (Mon), 5 (Fri), or 6 (Sat)
-  if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
-    alert("Please select a Monday, Friday, or Saturday.");
+  if (!sunrise && !sunset) {
+    alert("Please select a time slot: Sunrise or Sunset.");
     return;
   }
 
   const timeSlot = sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)";
 
-  setBookingData("date", dateInput);
+  setBookingData("date", dateInput.value);
   setBookingData("time", timeSlot);
 
   window.location.href = "booking-step3.html";
 }
 
-// On Step3: gather user info
+// Step 3: gather user info
 function submitUserInfo() {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
@@ -86,11 +123,10 @@ function submitUserInfo() {
   window.location.href = "booking-step4.html";
 }
 
-// On Step4: review data, confirm disclaimers, then proceed to pay
+// Step 4: review data, confirm disclaimers, then proceed to pay
 function reviewBooking() {
-  // Display data
   const product = getBookingData("product") || "";
-  const currency = getBookingData("currency") || "";
+  const tickets = getBookingData("tickets") || "";
   const date = getBookingData("date") || "";
   const time = getBookingData("time") || "";
   const name = getBookingData("name") || "";
@@ -98,7 +134,7 @@ function reviewBooking() {
   const phone = getBookingData("phone") || "";
 
   document.getElementById("review-product").innerText = product;
-  document.getElementById("review-currency").innerText = currency;
+  document.getElementById("review-tickets").innerText = tickets;
   document.getElementById("review-date").innerText = date;
   document.getElementById("review-time").innerText = time;
   document.getElementById("review-name").innerText = name;
@@ -110,7 +146,7 @@ function confirmBooking() {
   // Check disclaimers
   const disclaimersChecked = document.getElementById("disclaimerCheck").checked;
   if (!disclaimersChecked) {
-    alert("You must check the waiver, terms, and conditions to proceed.");
+    alert("You must check the waiver, terms, & conditions to proceed.");
     return;
   }
   // Generate order ID
@@ -121,7 +157,7 @@ function confirmBooking() {
   window.location.href = "booking-payment.html";
 }
 
-// Payment page: show final success after simulating
+// Payment simulation
 function simulatePayment() {
   // Show message, then redirect after short delay
   setTimeout(() => {
@@ -129,7 +165,7 @@ function simulatePayment() {
   }, 2000);
 }
 
-// Booking Success: display orderId
+// Payment success page
 function showSuccess() {
   const orderId = getBookingData("orderId");
   const orderIdSpan = document.getElementById("orderId");

@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, 
-                 user-scalable=no, 
-                 initial-scale=1.0, 
+        content="width=device-width, initial-scale=1.0,
+                 user-scalable=no,
                  maximum-scale=1.0">
   <title>Booking - Step 2</title>
   <link rel="stylesheet" href="style.css">
@@ -17,7 +16,7 @@
     <div class="content leftAlign">
       <form onsubmit="event.preventDefault(); selectDateTime();">
         <label for="dateInput">Select a date (Mon/Fri/Sat):</label>
-        <input type="date" id="dateInput">
+        <input type="date" id="dateInput" oninput="validateDate()">
 
         <p><strong>Time slot:</strong></p>
         <label>
@@ -37,7 +36,8 @@
     </div>
   </div>
   <div class="beneath-footer">
-    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.
   </div>
 </body>
 </html>
