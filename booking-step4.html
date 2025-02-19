@@ -2,22 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
-  <title>Booking - Review</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+  <title>Booking - Step 4</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
 <body onload="reviewBooking()">
   <div class="container">
-    <div class="title">Step 4: Review & Confirm</div>
+    <div class="title">STEP 4: REVIEW & CONFIRM</div>
     <div class="content leftAlign">
-      <p><strong>Product:</strong> <span id="review-product"></span></p>
-      <p><strong>Tickets:</strong> <span id="review-tickets"></span></p>
-      <p><strong>Date:</strong> <span id="review-date"></span></p>
-      <p><strong>Time:</strong> <span id="review-time"></span></p>
-      <p><strong>Name:</strong> <span id="review-name"></span></p>
-      <p><strong>Email:</strong> <span id="review-email"></span></p>
-      <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+      <!-- We wrap details in review-list to compress vertical space -->
+      <div class="review-list" style="margin-bottom:1rem;">
+        <p><strong>Product:</strong> <span id="review-product"></span></p>
+        <p><strong>Tickets:</strong> <span id="review-tickets"></span></p>
+        <p><strong>Date:</strong> <span id="review-date"></span></p>
+        <p><strong>Time:</strong> <span id="review-time"></span></p>
+        <p><strong>Name:</strong> <span id="review-name"></span></p>
+        <p><strong>Email:</strong> <span id="review-email"></span></p>
+        <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+      </div>
 
       <p>Please confirm you have read our 
         <a href="terms.html" target="_blank">waiver, terms, & conditions</a>.
@@ -26,7 +30,7 @@
         <input type="checkbox" id="disclaimerCheck"> I agree to the above
       </label>
 
-      <button onclick="confirmBooking()">Pay</button>
+      <button onclick="confirmBooking()">PAY</button>
     </div>
     <div class="footer">
       <a href="booking-step3.html">Back</a>

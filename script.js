@@ -20,14 +20,37 @@ function generateOrderId() {
   return year + month + day + hours + minutes + seconds;
 }
 
-// Toggle tickets field for Group Tour
+// Toggle tickets field for Group Tour, and show total
 function toggleTicketsInput() {
   const groupRadio = document.getElementById("groupTour");
   const ticketsField = document.getElementById("ticketsField");
+  const groupTotal = document.getElementById("groupTotal");
+
   if (groupRadio && groupRadio.checked) {
     ticketsField.style.display = "block";
+    groupTotal.style.display = "block";
+    updateGroupTotal(); // compute initial total
   } else {
     ticketsField.style.display = "none";
+    groupTotal.style.display = "none";
+  }
+}
+
+// If Group Tour is selected, compute total: 
+//   # of tickets * $90 or # of tickets * €86
+function updateGroupTotal() {
+  const ticketsInput = document.getElementById("tickets");
+  const groupTotal = document.getElementById("groupTotal");
+  if (!ticketsInput || !groupTotal) return;
+
+  let num = parseInt(ticketsInput.value.trim(), 10);
+  if (isNaN(num) || num < 3) {
+    // default if invalid
+    groupTotal.textContent = "Total: $0 / €0";
+  } else {
+    const usdTotal = num * 90;
+    const eurTotal = num * 86;
+    groupTotal.textContent = `Total: $${usdTotal} / €${eurTotal}`;
   }
 }
 
@@ -41,6 +64,7 @@ function selectProduct() {
     setBookingData("tickets", "1-2");
   } else if (groupRadio.checked) {
     setBookingData("product", "Group Tour ($90 / €86)");
+
     const ticketsInput = document.getElementById("tickets");
     const numTickets = parseInt(ticketsInput.value.trim(), 10);
     if (numTickets < 3) {
@@ -52,6 +76,7 @@ function selectProduct() {
     alert("Please choose a product.");
     return;
   }
+
   window.location.href = "booking-step2.html";
 }
 

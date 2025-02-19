@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
   <title>Booking - Step 1</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
 <body onload="toggleTicketsInput()">
   <div class="container">
-    <div class="title">Step 1: Choose Product</div>
+    <div class="title">STEP 1: CHOOSE PRODUCT</div>
     <div class="content leftAlign">
       <form onsubmit="event.preventDefault(); selectProduct();">
         <p><strong>Products:</strong></p>
@@ -22,13 +23,17 @@
           Group Tour ($90 / €86) - 3+ participants
         </label>
 
-        <!-- Hidden by default, appears if Group Tour is checked -->
+        <!-- If Group Tour is selected, show tickets and total -->
         <div id="ticketsField" style="display:none; margin-top:0.5rem;">
           <label for="tickets">Number of Tickets (3+):</label>
-          <input type="number" id="tickets" value="3" min="3">
+          <input type="number" id="tickets" value="3" min="3" oninput="updateGroupTotal()">
         </div>
 
-        <button type="submit">Next</button>
+        <p id="groupTotal" style="display:none; font-weight:bold; margin-top:0.5rem;">
+          <!-- e.g. "Total: $270 / €258" if 3 tickets -->
+        </p>
+
+        <button type="submit">NEXT</button>
       </form>
     </div>
     <div class="footer">
