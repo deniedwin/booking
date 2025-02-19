@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0,
-                 user-scalable=no,
-                 maximum-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
   <title>Booking - Step 1</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
@@ -17,11 +14,11 @@
       <form onsubmit="event.preventDefault(); selectProduct();">
         <p><strong>Products:</strong></p>
         <label>
-          <input type="radio" id="singleTour" name="product" value="SingleTour" onclick="toggleTicketsInput()">
+          <input type="radio" id="singleTour" name="product" onclick="toggleTicketsInput()">
           Single Tour ($100 / €96)
         </label>
         <label>
-          <input type="radio" id="groupTour" name="product" value="GroupTour" onclick="toggleTicketsInput()">
+          <input type="radio" id="groupTour" name="product" onclick="toggleTicketsInput()">
           Group Tour ($90 / €86) - 3+ participants
         </label>
 
@@ -42,8 +39,7 @@
   <div class="beneath-footer">
     Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
     The operational company is Klif Curacao BV.
-    <br>
-    Klif©
+    <br>Klif©
   </div>
 </body>
 </html>

@@ -1,18 +1,16 @@
 // script.js
 
-// Store booking data in localStorage
+// Save & retrieve data
 function setBookingData(key, value) {
   localStorage.setItem(key, value);
 }
-
 function getBookingData(key) {
   return localStorage.getItem(key);
 }
 
-// Generate an order ID with prefix date/time in yyyymmddhhmmss format
+// Generate unique order ID
 function generateOrderId() {
   const now = new Date();
-  // Format: YYYYMMDDHHMMSS
   const year = now.getFullYear().toString();
   const month = String(now.getMonth() + 1).padStart(2, '0');
   const day = String(now.getDate()).padStart(2, '0');
@@ -22,11 +20,10 @@ function generateOrderId() {
   return year + month + day + hours + minutes + seconds;
 }
 
-// Toggle tickets input if Group Tour is selected
+// Toggle tickets field for Group Tour
 function toggleTicketsInput() {
   const groupRadio = document.getElementById("groupTour");
   const ticketsField = document.getElementById("ticketsField");
-
   if (groupRadio && groupRadio.checked) {
     ticketsField.style.display = "block";
   } else {
@@ -34,21 +31,19 @@ function toggleTicketsInput() {
   }
 }
 
-// Step 1: gather product & # of tickets (if group)
+// Step 1: pick product
 function selectProduct() {
   const singleRadio = document.getElementById("singleTour");
   const groupRadio = document.getElementById("groupTour");
-  let product = "";
 
   if (singleRadio.checked) {
-    product = "Single Tour ($100 / €96)";
-    setBookingData("tickets", "1-2"); 
+    setBookingData("product", "Single Tour ($100 / €96)");
+    setBookingData("tickets", "1-2");
   } else if (groupRadio.checked) {
-    product = "Group Tour ($90 / €86)";
-    // Retrieve number of tickets
+    setBookingData("product", "Group Tour ($90 / €86)");
     const ticketsInput = document.getElementById("tickets");
-    const numTickets = ticketsInput.value.trim();
-    if (parseInt(numTickets) < 3) {
+    const numTickets = parseInt(ticketsInput.value.trim(), 10);
+    if (numTickets < 3) {
       alert("Group must be 3 or more participants.");
       return;
     }
@@ -57,22 +52,23 @@ function selectProduct() {
     alert("Please choose a product.");
     return;
   }
-
-  setBookingData("product", product);
   window.location.href = "booking-step2.html";
 }
 
-// Step 2: Only allow Mon(1)/Fri(5)/Sat(6)
+// Validate date for Mon(1), Fri(5), Sat(6)
 function validateDate() {
   const dateInput = document.getElementById("dateInput");
-  const chosenDate = dateInput.value;
-  if (!chosenDate) return;
+  if (!dateInput.value) return;
 
-  const dateObj = new Date(chosenDate);
-  const dayOfWeek = dateObj.getDay(); // local day
+  const parts = dateInput.value.split("-");
+  if (parts.length !== 3) return;
+  const [yyyy, mm, dd] = parts.map(Number);
+
+  const dateObj = new Date(yyyy, mm - 1, dd);
+  const dayOfWeek = dateObj.getDay();
   if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
-    alert("Please select a Monday, Friday, or Saturday.");
-    dateInput.value = ""; // reset
+    alert("Please select Monday, Friday, or Saturday.");
+    dateInput.value = "";
   }
 }
 
@@ -86,28 +82,24 @@ function selectDateTime() {
     return;
   }
   if (!sunrise && !sunset) {
-    alert("Please select a time slot: Sunrise or Sunset.");
+    alert("Please select Sunrise or Sunset.");
     return;
   }
-
-  const timeSlot = sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)";
   setBookingData("date", dateInput.value);
-  setBookingData("time", timeSlot);
+  setBookingData("time", sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)");
 
   window.location.href = "booking-step3.html";
 }
 
-// Step 3: gather user info
+// Step 3: user info
 function submitUserInfo() {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
-
   if (!name || !email || !phone) {
     alert("Please fill in all fields.");
     return;
   }
-
   setBookingData("name", name);
   setBookingData("email", email);
   setBookingData("phone", phone);
@@ -115,34 +107,24 @@ function submitUserInfo() {
   window.location.href = "booking-step4.html";
 }
 
-// Step 4: review data, then proceed to pay
+// Step 4: review
 function reviewBooking() {
-  const product = getBookingData("product") || "";
-  const tickets = getBookingData("tickets") || "";
-  const date = getBookingData("date") || "";
-  const time = getBookingData("time") || "";
-  const name = getBookingData("name") || "";
-  const email = getBookingData("email") || "";
-  const phone = getBookingData("phone") || "";
-
-  document.getElementById("review-product").innerText = product;
-  document.getElementById("review-tickets").innerText = tickets;
-  document.getElementById("review-date").innerText = date;
-  document.getElementById("review-time").innerText = time;
-  document.getElementById("review-name").innerText = name;
-  document.getElementById("review-email").innerText = email;
-  document.getElementById("review-phone").innerText = phone;
+  document.getElementById("review-product").innerText = getBookingData("product") || "";
+  document.getElementById("review-tickets").innerText = getBookingData("tickets") || "";
+  document.getElementById("review-date").innerText = getBookingData("date") || "";
+  document.getElementById("review-time").innerText = getBookingData("time") || "";
+  document.getElementById("review-name").innerText = getBookingData("name") || "";
+  document.getElementById("review-email").innerText = getBookingData("email") || "";
+  document.getElementById("review-phone").innerText = getBookingData("phone") || "";
 }
 
 function confirmBooking() {
-  const disclaimersChecked = document.getElementById("disclaimerCheck").checked;
-  if (!disclaimersChecked) {
-    alert("You must check the waiver, terms, & conditions to proceed.");
+  const checkBox = document.getElementById("disclaimerCheck");
+  if (!checkBox.checked) {
+    alert("Please agree to waiver, terms & conditions.");
     return;
   }
-  const orderId = generateOrderId();
-  setBookingData("orderId", orderId);
-
+  setBookingData("orderId", generateOrderId());
   window.location.href = "booking-payment.html";
 }
 
@@ -153,11 +135,10 @@ function simulatePayment() {
   }, 2000);
 }
 
-// Payment success page
+// Payment success
 function showSuccess() {
   const orderId = getBookingData("orderId");
-  const orderIdSpan = document.getElementById("orderId");
-  if (orderId && orderIdSpan) {
-    orderIdSpan.innerText = orderId;
+  if (orderId) {
+    document.getElementById("orderId").innerText = orderId;
   }
 }

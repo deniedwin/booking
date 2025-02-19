@@ -1,4 +1,5 @@
 /* style.css */
+
 html, body {
   margin: 0;
   padding: 0;
@@ -7,60 +8,59 @@ html, body {
   background: #fff;
   color: #000;
   font-family: Arial, sans-serif;
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 body {
   box-sizing: border-box;
 }
 
-/*
-  We do:
-  - container height: ~78vh
-  - top margin: 2vh, bottom margin: 1vh
-  - horizontal padding: 2vw inside the container
-  - beneath-footer: ~9vh
+/* 
+   We want horizontal padding, plus top margin so it doesn't touch the screen edge.
+   Container is 90vw wide, up to 600px max. 
+   Height ~80vh, so there's room for the bottom note.
 */
 .container {
-  box-sizing: border-box;
-  width: 100%;
+  width: 90vw;
   max-width: 600px;
-  height: 78vh; 
-  /* Center horizontally, with some top/bottom margin */
-  margin: 2vh auto 1vh auto; 
-  /* Add side padding so there's space on left/right */
-  padding: 0.5rem 2vw; 
-  border: 2px solid #000; /* Brutalist black frame */
+  height: 80vh;
+  margin: 5vh auto 0 auto;  /* 5vh from top, center horizontally, no bottom margin */
   
+  border: 2px solid #000;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem;  /* internal padding around edges */
 }
 
-/* 
-  The note at the bottom is a separate element 
-  outside .container, ~9vh 
+/* The content inside the container:
+   - Centered text
+   - Max 50% of container width for "breathing space"
 */
-.beneath-footer {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 600px;
-  height: 9vh; /* about 9% of screen height */
-  margin: 0 auto;
-  border-top: 2px solid #000;
-  
+.content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;   /* center horizontally */
+  margin: 0 auto;
+  max-width: 50%;        /* limit to 50% of .container width */
   text-align: center;
-
-  padding: 0 0.5rem;
-  font-size: 0.75rem;
-  color: #444;
 }
 
+/* For pages needing left-aligned content or forms: 
+   We'll add the class .leftAlign to .content 
+   or forms within .content 
+*/
+.leftAlign {
+  align-items: flex-start;
+  text-align: left;
+  max-width: 50%;
+}
+
+/* Title text */
 .title {
   font-size: 1rem;
   font-weight: bold;
@@ -69,26 +69,11 @@ body {
   text-align: center;
 }
 
-.content {
-  flex: 1;
-  width: 100%;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.leftAlign {
-  text-align: left;
-  align-items: flex-start;
-}
-
-/* Footer at bottom inside .container */
+/* Footer with a thinner top line */
 .footer {
-  border-top: 2px solid #000;
   width: 100%;
-  padding-top: 0.25rem;
+  border-top: 1px solid #000; /* thinner line */
+  padding-top: 0.5rem;
   display: flex;
   justify-content: space-around;
 }
@@ -98,6 +83,22 @@ body {
   color: #000;
   font-weight: bold;
   font-size: 0.75rem; 
+}
+
+/* 
+   beneath-footer area for the note:
+   We also add a thin border-top for separation
+*/
+.beneath-footer {
+  width: 90vw;
+  max-width: 600px;
+  margin: 0 auto 2vh auto; /* small bottom margin so it doesn't sit at absolute bottom */
+  border-top: 1px solid #000; 
+  text-align: center;
+  font-size: 0.75rem;
+  color: #444;
+  padding-top: 0.5rem;
+  box-sizing: border-box;
 }
 
 /* Buttons */
@@ -118,17 +119,17 @@ button:hover, .btn:hover {
   color: #000;
 }
 
-/* Form styles */
+/* Forms */
 form {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* left align form fields */
   width: 100%;
 }
 
+/* A small label & input style */
 label {
   font-weight: bold;
-  margin: 0.25rem 0 0.1rem;
+  margin: 0.5rem 0 0.2rem;
   font-size: 0.8rem;
 }
 
@@ -137,7 +138,7 @@ input[type=email],
 input[type=tel],
 input[type=date],
 input[type=number] {
-  width: 90%;
+  width: 100%;
   padding: 0.3rem;
   margin-bottom: 0.5rem;
   border: 2px solid #000;
@@ -146,8 +147,9 @@ input[type=number] {
   font-size: 0.8rem;
 }
 
+/* If you still want a <select> somewhere, it's styled similarly */
 select {
-  width: 90%;
+  width: 100%;
   padding: 0.3rem;
   margin-bottom: 0.5rem;
   border: 2px solid #000;
