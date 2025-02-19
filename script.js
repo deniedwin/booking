@@ -45,11 +45,9 @@ function selectProduct() {
     setBookingData("tickets", "1-2"); 
   } else if (groupRadio.checked) {
     product = "Group Tour ($90 / €86)";
-    
     // Retrieve number of tickets
     const ticketsInput = document.getElementById("tickets");
     const numTickets = ticketsInput.value.trim();
-    // At least 3
     if (parseInt(numTickets) < 3) {
       alert("Group must be 3 or more participants.");
       return;
@@ -61,25 +59,20 @@ function selectProduct() {
   }
 
   setBookingData("product", product);
-
-  // Move to step 2
   window.location.href = "booking-step2.html";
 }
 
-// Step 2: Only allow Mon/Fri/Sat
+// Step 2: Only allow Mon(1)/Fri(5)/Sat(6)
 function validateDate() {
   const dateInput = document.getElementById("dateInput");
   const chosenDate = dateInput.value;
-  if (!chosenDate) return; // No date chosen yet
+  if (!chosenDate) return;
 
-  const dateObj = new Date(chosenDate + "T00:00:00"); 
-  // T00:00:00 to ensure correct day in local time
-  
-  // Sunday=0, Monday=1, Tuesday=2, Wed=3, Thu=4, Fri=5, Sat=6
-  const dayOfWeek = dateObj.getUTCDay();
+  const dateObj = new Date(chosenDate);
+  const dayOfWeek = dateObj.getDay(); // local day
   if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
     alert("Please select a Monday, Friday, or Saturday.");
-    dateInput.value = ""; // reset invalid date
+    dateInput.value = ""; // reset
   }
 }
 
@@ -98,7 +91,6 @@ function selectDateTime() {
   }
 
   const timeSlot = sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)";
-
   setBookingData("date", dateInput.value);
   setBookingData("time", timeSlot);
 
@@ -123,7 +115,7 @@ function submitUserInfo() {
   window.location.href = "booking-step4.html";
 }
 
-// Step 4: review data, confirm disclaimers, then proceed to pay
+// Step 4: review data, then proceed to pay
 function reviewBooking() {
   const product = getBookingData("product") || "";
   const tickets = getBookingData("tickets") || "";
@@ -143,23 +135,19 @@ function reviewBooking() {
 }
 
 function confirmBooking() {
-  // Check disclaimers
   const disclaimersChecked = document.getElementById("disclaimerCheck").checked;
   if (!disclaimersChecked) {
     alert("You must check the waiver, terms, & conditions to proceed.");
     return;
   }
-  // Generate order ID
   const orderId = generateOrderId();
   setBookingData("orderId", orderId);
 
-  // Go to payment simulation
   window.location.href = "booking-payment.html";
 }
 
 // Payment simulation
 function simulatePayment() {
-  // Show message, then redirect after short delay
   setTimeout(() => {
     window.location.href = "booking-success.html";
   }, 2000);
