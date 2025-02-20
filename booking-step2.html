@@ -1,10 +1,12 @@
+<!-- booking-step2.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" 
-        content="width=device-width,initial-scale=1.0,
-                 user-scalable=no,maximum-scale=1.0">
+        content="width=device-width, initial-scale=1.0,
+                 user-scalable=no, 
+                 maximum-scale=1.0">
   <title>Step 2 - Date & Time</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
@@ -12,13 +14,18 @@
 <body onload="initStep2()">
   <div class="box">
     <h2>Step 2: Pick a Date</h2>
+    
+    <!-- Prev/Next Buttons -->
     <div style="text-align:center;">
       <span class="calendar-prevnext" onclick="prevMonth()">Prev</span>
       <span class="calendar-prevnext" onclick="nextMonth()">Next</span>
     </div>
-    <div id="asciiCalendar" class="calendar-container">
-      <!-- ASCII calendar draws here -->
-    </div>
+    
+    <!-- ASCII calendar container -->
+    <div id="asciiCalendar" class="calendar-container" style="display:block; margin:0 auto;"></div>
+    
+    <!-- Show selected date here -->
+    <p id="selectedDate" style="font-weight:bold;"></p>
 
     <h3>Timeslot</h3>
     <label>

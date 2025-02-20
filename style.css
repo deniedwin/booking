@@ -101,32 +101,44 @@ a:hover {
   margin: 5px 0;
 }
 
-/* ASCII calendar styles */
+/* style.css (only the relevant section for alignment) */
+
+/* ... existing styles ... */
+
+/* For ASCII calendar, force a fixed-width font and 
+   align columns by day index. We'll store each day 
+   in a <span> with equal width. 
+*/
 .calendar-container {
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align: center;
+  text-align: left; 
   font-size: 13px;
-  white-space: pre; /* So spacing aligns properly in ASCII */
-  overflow-x: auto; /* If too wide on smaller devices, allow horizontal scroll */
-  display: inline-block;
-  border: 2px solid #000; 
-  padding: 5px;
-}
-
-.calendar-header {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.calendar-prevnext {
-  margin: 5px;
-  padding: 5px;
+  font-family: monospace;
+  display: block;
   border: 2px solid #000;
-  display: inline-block;
-  cursor: pointer;
+  padding: 5px;
+  overflow-x: auto; 
+  width: fit-content;  /* shrink to fit content, so it doesn't overflow box */
+  margin: 0 auto;      /* center horizontally */
 }
-.calendar-prevnext:hover {
+
+.calendar-row {
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+/* clickable day style */
+.calendar-day {
+  display: inline-block;
+  width: 3ch;      /* enough space for 2-digit day plus bracket */
+  text-align: center;
+  cursor: pointer;
+  margin-right: 1ch;
+}
+
+.calendar-day:hover {
   background: #000;
   color: #fff;
 }

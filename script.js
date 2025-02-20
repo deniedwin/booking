@@ -1,6 +1,6 @@
 /* script.js */
 
-/* Save & retrieve data in localStorage */
+/* Common localStorage setters/getters */
 function setBookingData(key, val) {
   localStorage.setItem(key, val);
 }
@@ -8,7 +8,7 @@ function getBookingData(key) {
   return localStorage.getItem(key);
 }
 
-/* Step 1: handle Single vs. Group, show total */
+/* --- STEP 1 LOGIC --- */
 function initStep1() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
@@ -33,7 +33,7 @@ function initStep1() {
   groupRadio.addEventListener("change", updateTotal);
   ticketsInput.addEventListener("input", updateTotal);
 
-  updateTotal(); // initialize
+  updateTotal(); // Initialize totals
 }
 
 function step1Next() {
@@ -50,7 +50,7 @@ function step1Next() {
     const ticketsInput = document.getElementById("ticketsInput");
     let tVal = parseInt(ticketsInput.value) || 0;
     if (tVal < 3) {
-      alert("Minimum 3 tickets for Group Tour");
+      alert("Minimum 3 tickets for Group Tour.");
       return;
     }
     setBookingData("product", "Group Tour");
@@ -59,14 +59,97 @@ function step1Next() {
   window.location.href = "booking-step2.html";
 }
 
-/* Step 2: ASCII calendar with next/prev month, highlight M/F/S */
+/* --- STEP 2 LOGIC: ASCII CALENDAR --- */
 let calYear, calMonth;
+let selectedDay = null;
 
 function initStep2() {
   const now = new Date();
   calYear = now.getFullYear();
   calMonth = now.getMonth();
   renderCalendar(calYear, calMonth);
+}
+
+/** Renders an aligned ASCII-like grid with clickable M/F/S. */
+function renderCalendar(year, month) {
+  const container = document.getElementById("asciiCalendar");
+  container.innerHTML = ""; 
+  selectedDay = null; // reset selection if user navigates months
+
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  // Title
+  const title = document.createElement("div");
+  title.style.textAlign = "center";
+  title.style.fontWeight = "bold";
+  title.textContent = `${monthNames[month].toUpperCase()} ${year}`;
+  container.appendChild(title);
+  
+  // Day headers row
+  const headerRow = document.createElement("div");
+  headerRow.className = "calendar-row";
+  const daysHeader = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  for (let d = 0; d < 7; d++) {
+    const cell = document.createElement("span");
+    cell.className = "calendar-day";
+    cell.style.fontWeight = "bold";
+    cell.textContent = daysHeader[d];
+    headerRow.appendChild(cell);
+  }
+  container.appendChild(headerRow);
+
+  // First day, leading spaces
+  const firstDay = new Date(year, month, 1);
+  let dayOfWeek = firstDay.getDay(); // 0=Sun
+  let currentRow = document.createElement("div");
+  currentRow.className = "calendar-row";
+
+  // Leading empty cells
+  for (let i = 0; i < dayOfWeek; i++) {
+    const emptyCell = document.createElement("span");
+    emptyCell.className = "calendar-day";
+    emptyCell.textContent = "  ";
+    currentRow.appendChild(emptyCell);
+  }
+
+  // Days in month
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const cell = document.createElement("span");
+    cell.className = "calendar-day";
+    
+    let wd = new Date(year, month, d).getDay();
+    let dayStr = d < 10 ? ` ${d}` : `${d}`;
+    
+    // Highlight if Monday(1), Fri(5), or Sat(6)
+    if (wd === 1 || wd === 5 || wd === 6) {
+      dayStr = `[${dayStr}]`; // bracket
+      cell.style.fontWeight = "bold";
+      // Make it clickable
+      cell.onclick = () => {
+        selectedDay = d;
+        // Display chosen day below the calendar
+        document.getElementById("selectedDate").textContent = 
+          `Selected date: ${dayStr.replace(/\[|\]/g,"")} ${monthNames[month]} ${year}`;
+      };
+    }
+    cell.textContent = dayStr;
+    currentRow.appendChild(cell);
+
+    // if we hit Saturday(6), new row
+    if (wd === 6) {
+      container.appendChild(currentRow);
+      currentRow = document.createElement("div");
+      currentRow.className = "calendar-row";
+    }
+  }
+  // leftover row if any
+  if (currentRow.childNodes.length > 0) {
+    container.appendChild(currentRow);
+  }
 }
 
 function prevMonth() {
@@ -86,63 +169,32 @@ function nextMonth() {
   renderCalendar(calYear, calMonth);
 }
 
-function renderCalendar(year, month) {
-  const calendarDiv = document.getElementById("asciiCalendar");
-  calendarDiv.innerHTML = "";
-  const monthNames = ["January","February","March","April","May","June","July",
-    "August","September","October","November","December"];
-  let firstDay = new Date(year, month, 1);
-  let dayOfWeek = firstDay.getDay(); // 0=Sun,1=Mon...
-  let header = `    ${monthNames[month].toUpperCase()} ${year}\n`;
-  header += "Su Mo Tu We Th Fr Sa\n";
-
-  let grid = "";
-  for (let i=0; i<dayOfWeek; i++){
-    grid += "   ";
-  }
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-  for (let d=1; d<=daysInMonth; d++){
-    let currentDay = new Date(year, month, d).getDay();
-    let dayStr = d<10 ? ` ${d}` : `${d}`;
-    if (currentDay === 1 || currentDay === 5 || currentDay===6) {
-      // highlight M/F/S
-      // bracket them
-      dayStr = `[${dayStr}]`;
-    } else {
-      dayStr = ` ${dayStr} `;
-    }
-    grid += dayStr;
-    if (currentDay===6) {
-      grid += "\n"; // new line after Sat
-    } else {
-      grid += " "; // space after each day
-    }
-  }
-  calendarDiv.textContent = header + grid;
-}
-
+/** Step 2: user clicks "Next" => must have selectedDay + Sunrise/Sunset */
 function step2Next() {
   const sunrise = document.getElementById("sunriseRadio").checked;
   const sunset = document.getElementById("sunsetRadio").checked;
+  if (!selectedDay) {
+    alert("Please click on a Monday, Friday, or Saturday in the calendar");
+    return;
+  }
   if (!sunrise && !sunset) {
     alert("Please pick Sunrise or Sunset");
     return;
   }
-  // store time slot
-  setBookingData("timeSlot", sunrise?"Sunrise":"Sunset");
-  // store month/year (roughly)
-  setBookingData("year", calYear.toString());
+  setBookingData("day", selectedDay.toString());
   setBookingData("month", calMonth.toString());
+  setBookingData("year", calYear.toString());
+  setBookingData("timeSlot", sunrise ? "Sunrise" : "Sunset");
   window.location.href = "booking-step3.html";
 }
 
-/* Step 3: user info */
+/* --- STEP 3 LOGIC: user info --- */
 function step3Next() {
   const name = document.getElementById("nameInput").value.trim();
   const email = document.getElementById("emailInput").value.trim();
   const phone = document.getElementById("phoneInput").value.trim();
   if (!name || !email || !phone) {
-    alert("Please fill all fields");
+    alert("Please fill all fields.");
     return;
   }
   setBookingData("name", name);
@@ -151,12 +203,13 @@ function step3Next() {
   window.location.href = "booking-step4.html";
 }
 
-/* Step 4: review, disclaimers link, checkbox above Pay */
+/* --- STEP 4 LOGIC: review & disclaimers --- */
 function initStep4() {
   const product = getBookingData("product") || "";
   const tickets = getBookingData("tickets") || "";
   const year = getBookingData("year") || "";
   const month = getBookingData("month") || "";
+  const day = getBookingData("day") || "";
   const timeSlot = getBookingData("timeSlot") || "";
   const name = getBookingData("name") || "";
   const email = getBookingData("email") || "";
@@ -165,13 +218,19 @@ function initStep4() {
   const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let monthStr = "";
   if (month) {
-    monthStr = monthNames[parseInt(month)];
+    let m = parseInt(month);
+    monthStr = monthNames[m] || "";
   }
 
   document.getElementById("reviewProduct").textContent = product;
   document.getElementById("reviewTickets").textContent = tickets;
-  document.getElementById("reviewDate").textContent = (year && monthStr)?(`${monthStr} ${year}`):"N/A";
-  document.getElementById("reviewTime").textContent = timeSlot||"N/A";
+  // e.g. "14 Feb 2025"
+  if (day && monthStr && year) {
+    document.getElementById("reviewDate").textContent = `${day} ${monthStr} ${year}`;
+  } else {
+    document.getElementById("reviewDate").textContent = "N/A";
+  }
+  document.getElementById("reviewTime").textContent = timeSlot || "N/A";
   document.getElementById("reviewName").textContent = name;
   document.getElementById("reviewEmail").textContent = email;
   document.getElementById("reviewPhone").textContent = phone;
@@ -183,19 +242,19 @@ function step4Pay() {
     alert("You must agree to disclaimers/terms");
     return;
   }
-  // generate an order id
+  // generate a simple order ID
   const orderId = Date.now().toString().slice(-6);
   setBookingData("orderId", orderId);
   window.location.href = "booking-payment.html";
 }
 
-/* Payment simulation -> success */
+/* --- PAYMENT & SUCCESS LOGIC --- */
 function initPayment() {
-  setTimeout(()=> {
-    window.location.href="booking-success.html";
-  },2000);
+  setTimeout(() => {
+    window.location.href = "booking-success.html";
+  }, 2000);
 }
 function initSuccess() {
-  const orderId = getBookingData("orderId")||"";
+  const orderId = getBookingData("orderId") || "";
   document.getElementById("successOrderId").textContent = orderId;
 }
