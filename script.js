@@ -1,6 +1,6 @@
-// script.js
+/* script.js */
 
-// Save & retrieve data
+/* LocalStorage Helpers */
 function setBookingData(key, value) {
   localStorage.setItem(key, value);
 }
@@ -8,162 +8,211 @@ function getBookingData(key) {
   return localStorage.getItem(key);
 }
 
-// Generate unique order ID
-function generateOrderId() {
-  const now = new Date();
-  const year = now.getFullYear().toString();
-  const month = String(now.getMonth() + 1).padStart(2, '0');
-  const day = String(now.getDate()).padStart(2, '0');
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  const seconds = String(now.getSeconds()).padStart(2, '0');
-  return year + month + day + hours + minutes + seconds;
-}
-
-// Toggle tickets field for Group Tour, and show total
-function toggleTicketsInput() {
+/* Step1: Single or Group. For group, store # tickets. */
+function toggleGroupTickets() {
   const groupRadio = document.getElementById("groupTour");
-  const ticketsField = document.getElementById("ticketsField");
-  const groupTotal = document.getElementById("groupTotal");
-
-  if (groupRadio && groupRadio.checked) {
-    ticketsField.style.display = "block";
-    groupTotal.style.display = "block";
-    updateGroupTotal(); // compute initial total
+  const ticketsDiv = document.getElementById("groupTicketsDiv");
+  if (groupRadio.checked) {
+    ticketsDiv.style.display = "block";
   } else {
-    ticketsField.style.display = "none";
-    groupTotal.style.display = "none";
+    ticketsDiv.style.display = "none";
   }
 }
 
-// If Group Tour is selected, compute total: 
-//   # of tickets * $90 or # of tickets * €86
-function updateGroupTotal() {
-  const ticketsInput = document.getElementById("tickets");
-  const groupTotal = document.getElementById("groupTotal");
-  if (!ticketsInput || !groupTotal) return;
-
-  let num = parseInt(ticketsInput.value.trim(), 10);
-  if (isNaN(num) || num < 3) {
-    // default if invalid
-    groupTotal.textContent = "Total: $0 / €0";
-  } else {
-    const usdTotal = num * 90;
-    const eurTotal = num * 86;
-    groupTotal.textContent = `Total: $${usdTotal} / €${eurTotal}`;
-  }
-}
-
-// Step 1: pick product
-function selectProduct() {
+function step1Submit() {
   const singleRadio = document.getElementById("singleTour");
   const groupRadio = document.getElementById("groupTour");
-
   if (singleRadio.checked) {
     setBookingData("product", "Single Tour ($100 / €96)");
     setBookingData("tickets", "1-2");
   } else if (groupRadio.checked) {
     setBookingData("product", "Group Tour ($90 / €86)");
-
-    const ticketsInput = document.getElementById("tickets");
-    const numTickets = parseInt(ticketsInput.value.trim(), 10);
-    if (numTickets < 3) {
-      alert("Group must be 3 or more participants.");
+    const num = parseInt(document.getElementById("groupTickets").value, 10);
+    if (isNaN(num) || num < 3) {
+      alert("Group Tour requires at least 3 participants");
       return;
     }
-    setBookingData("tickets", numTickets);
+    setBookingData("tickets", num);
   } else {
-    alert("Please choose a product.");
+    alert("Please select a product");
     return;
   }
-
   window.location.href = "booking-step2.html";
 }
 
-// Validate date for Mon(1), Fri(5), Sat(6)
-function validateDate() {
-  const dateInput = document.getElementById("dateInput");
-  if (!dateInput.value) return;
+/* ASCII Calendar Logic (Step 2) */
+let currentMonth = new Date().getMonth();
+let currentYear = new Date().getFullYear();
 
-  const parts = dateInput.value.split("-");
-  if (parts.length !== 3) return;
-  const [yyyy, mm, dd] = parts.map(Number);
-
-  const dateObj = new Date(yyyy, mm - 1, dd);
-  const dayOfWeek = dateObj.getDay();
-  if (dayOfWeek !== 1 && dayOfWeek !== 5 && dayOfWeek !== 6) {
-    alert("Please select Monday, Friday, or Saturday.");
-    dateInput.value = "";
-  }
+// For Step 2, we initialize the ASCII calendar
+function initCalendar() {
+  drawAsciiCalendar(currentYear, currentMonth);
 }
 
-function selectDateTime() {
-  const dateInput = document.getElementById("dateInput");
-  const sunrise = document.getElementById("sunrise").checked;
-  const sunset = document.getElementById("sunset").checked;
-
-  if (!dateInput.value) {
-    alert("Please select a valid date.");
-    return;
+function prevMonth() {
+  currentMonth--;
+  if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
   }
-  if (!sunrise && !sunset) {
-    alert("Please select Sunrise or Sunset.");
-    return;
-  }
-  setBookingData("date", dateInput.value);
-  setBookingData("time", sunrise ? "Sunrise (5-8am)" : "Sunset (4-7pm)");
+  drawAsciiCalendar(currentYear, currentMonth);
+}
 
+function nextMonth() {
+  currentMonth++;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  }
+  drawAsciiCalendar(currentYear, currentMonth);
+}
+
+function drawAsciiCalendar(year, month) {
+  const asciiDiv = document.getElementById("asciiCalendar");
+  if (!asciiDiv) return;
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0).getDate();
+
+  // Create a matrix or lines for the ASCII grid
+  // 0 = Sunday, 1 = Monday, ... 6 = Saturday
+  let header = `${getMonthName(month)} ${year}\nSu Mo Tu We Th Fr Sa\n`;
+  let dayOfWeek = firstDay.getDay();
+  let ascii = "";
+
+  // Fill initial spaces
+  let line = "";
+  for (let i = 0; i < dayOfWeek; i++) {
+    line += "   "; // 2 chars + space for alignment
+  }
+
+  for (let date = 1; date <= lastDay; date++) {
+    // Check if it's Mon(1), Fri(5), or Sat(6)
+    let dayTest = new Date(year, month, date).getDay();
+    let isClickable = (dayTest === 1 || dayTest === 5 || dayTest === 6);
+
+    let dayStr = date < 10 ? ` ${date}` : `${date}`;
+    if (isClickable) {
+      // We'll wrap in brackets or something
+      // We'll store an inline "data-date" attribute for clicking
+      dayStr = `[${dayStr}]`;
+    } else {
+      // Normal day
+      dayStr = ` ${dayStr} `;
+    }
+
+    line += dayStr;
+    if (dayOfWeek === 6) {
+      // Saturday -> break line
+      ascii += line + "\n";
+      line = "";
+      dayOfWeek = 0;
+    } else {
+      dayOfWeek++;
+    }
+  }
+  if (line !== "") ascii += line + "\n";
+
+  // Render final ASCII
+  const finalText = header + ascii;
+  asciiDiv.innerHTML = `<pre>${finalText}</pre>`;
+
+  // Add clickable day logic
+  addCalendarClickHandlers(year, month);
+}
+
+function addCalendarClickHandlers(year, month) {
+  const asciiDiv = document.getElementById("asciiCalendar");
+  if (!asciiDiv) return;
+
+  // We'll look for bracketed days like `[12]`
+  // Then turn them into clickable spans
+  // We'll do a quick find/replace approach or we can parse the text
+
+  // Easiest approach: after we print the <pre>, we find them via innerHTML
+  let html = asciiDiv.innerHTML;
+
+  // Regex that finds e.g. `[ 5]` or `[12]` or `[ 1]`
+  const bracketRegex = /\[(\s?\d{1,2})\]/g;
+  // Replace with a span that has an onclick
+  html = html.replace(bracketRegex, (match, p1) => {
+    // p1 = day number with optional leading space
+    const dayNum = parseInt(p1, 10);
+    // We'll create a clickable link
+    return `<span class="clickable-day" onclick="selectDay(${year}, ${month}, ${dayNum})">[${p1}]</span>`;
+  });
+
+  asciiDiv.innerHTML = html;
+}
+
+// Called when user clicks a bracketed day in the ASCII calendar
+function selectDay(year, month, day) {
+  // Store date chosen
+  const chosenDate = new Date(year, month, day);
+  // Format string if needed, or just store as time
+  setBookingData("date", chosenDate.toDateString()); 
+  // e.g. "Tue Feb 25 2025"
+  // Or store year-mo-day if you prefer
   window.location.href = "booking-step3.html";
 }
 
-// Step 3: user info
-function submitUserInfo() {
+function getMonthName(m) {
+  const names = ["January","February","March","April","May","June",
+                 "July","August","September","October","November","December"];
+  return names[m];
+}
+
+/* Step 3: name, email, phone */
+function step3Submit() {
   const name = document.getElementById("name").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phone").value.trim();
   if (!name || !email || !phone) {
-    alert("Please fill in all fields.");
+    alert("Please fill all fields.");
     return;
   }
   setBookingData("name", name);
   setBookingData("email", email);
   setBookingData("phone", phone);
-
   window.location.href = "booking-step4.html";
 }
 
-// Step 4: review
-function reviewBooking() {
+/* Step 4: review data, disclaimers, then pay */
+function initReview() {
   document.getElementById("review-product").innerText = getBookingData("product") || "";
   document.getElementById("review-tickets").innerText = getBookingData("tickets") || "";
   document.getElementById("review-date").innerText = getBookingData("date") || "";
-  document.getElementById("review-time").innerText = getBookingData("time") || "";
   document.getElementById("review-name").innerText = getBookingData("name") || "";
   document.getElementById("review-email").innerText = getBookingData("email") || "";
   document.getElementById("review-phone").innerText = getBookingData("phone") || "";
 }
 
 function confirmBooking() {
-  const checkBox = document.getElementById("disclaimerCheck");
-  if (!checkBox.checked) {
-    alert("Please agree to waiver, terms & conditions.");
+  const disclaimCheck = document.getElementById("disclaimCheck");
+  if (!disclaimCheck.checked) {
+    alert("Please agree to disclaimers/terms.");
     return;
   }
-  setBookingData("orderId", generateOrderId());
+  // Generate an orderId
+  const orderId = genOrderId();
+  setBookingData("orderId", orderId);
   window.location.href = "booking-payment.html";
 }
 
-// Payment simulation
+function genOrderId() {
+  const now = new Date();
+  return "KLIF" + now.getTime();
+}
+
+/* Payment simulation: after ~2s, move to success */
 function simulatePayment() {
   setTimeout(() => {
     window.location.href = "booking-success.html";
   }, 2000);
 }
 
-// Payment success
-function showSuccess() {
-  const orderId = getBookingData("orderId");
-  if (orderId) {
-    document.getElementById("orderId").innerText = orderId;
-  }
+/* Show success on final page */
+function initSuccess() {
+  const oid = getBookingData("orderId");
+  if (oid) document.getElementById("orderId").innerText = oid;
 }

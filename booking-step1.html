@@ -2,49 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
-  <title>Booking - Step 1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klif - Booking Step 1</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body onload="toggleTicketsInput()">
-  <div class="container">
-    <div class="title">STEP 1: CHOOSE PRODUCT</div>
-    <div class="content leftAlign">
-      <form onsubmit="event.preventDefault(); selectProduct();">
-        <p><strong>Products:</strong></p>
-        <label>
-          <input type="radio" id="singleTour" name="product" onclick="toggleTicketsInput()">
-          Single Tour ($100 / €96)
-        </label>
-        <label>
-          <input type="radio" id="groupTour" name="product" onclick="toggleTicketsInput()">
-          Group Tour ($90 / €86) - 3+ participants
-        </label>
+<body>
+  <div class="box">
+    <h1>Booking - Step 1</h1>
+    <p>Select Product</p>
+    <label>
+      <input type="radio" id="singleTour" name="tour" onclick="toggleGroupTickets()"> 
+      Single Tour ($100 / €96)
+    </label><br>
+    <label>
+      <input type="radio" id="groupTour" name="tour" onclick="toggleGroupTickets()">
+      Group Tour ($90 / €86) - 3+ participants
+    </label>
 
-        <!-- If Group Tour is selected, show tickets and total -->
-        <div id="ticketsField" style="display:none; margin-top:0.5rem;">
-          <label for="tickets">Number of Tickets (3+):</label>
-          <input type="number" id="tickets" value="3" min="3" oninput="updateGroupTotal()">
-        </div>
-
-        <p id="groupTotal" style="display:none; font-weight:bold; margin-top:0.5rem;">
-          <!-- e.g. "Total: $270 / €258" if 3 tickets -->
-        </p>
-
-        <button type="submit">NEXT</button>
-      </form>
+    <div id="groupTicketsDiv" style="display:none; margin-top:10px;">
+      <label>Number of participants (3+):</label>
+      <input type="number" id="groupTickets" value="3" min="3" style="width:120px;">
     </div>
-    <div class="footer">
-      <a href="index.html">Home</a>
-      <a href="booking-step1.html">Booking</a>
-    </div>
+
+    <p><button onclick="step1Submit()">Next</button></p>
   </div>
-  <div class="beneath-footer">
-    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
-    The operational company is Klif Curacao BV.
-    <br>Klif©
+
+  <div class="footer">
+    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
+    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
   </div>
 </body>
 </html>

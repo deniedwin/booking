@@ -1,158 +1,109 @@
 /* style.css */
 
+/* Base brutalist styling from old snippet:
+   - Monospace at 13px
+   - Body with smaller padding
+   - Single .box with 3px black border
+   - Footer with 1px top border
+*/
+
 html, body {
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
+  padding: 20px; /* smaller than 40px so it fits better on mobile */
   background: #fff;
   color: #000;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
+  font-family: monospace;
+  font-size: 13px;
 }
 
-body {
-  box-sizing: border-box;
-}
-
-/* Container: 90% viewport width, max 600px, 2px border */
-.container {
-  width: 90vw;
-  max-width: 600px;
-  height: 80vh;
-  margin: 5vh auto 2rem auto; /* extra bottom margin so we can place a line/note after */
-  border: 2px solid #000;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem;
-}
-
-/* Centered content with 50% max width, giving "breathing space" */
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
-  max-width: 50%;
+.box {
+  border: 3px solid #000; /* old snippet used 3px */
+  padding: 20px;
+  margin-bottom: 20px; /* spacing between box(es) if any */
   text-align: center;
+  max-width: 800px; /* old snippet had 800px container */
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* For pages that need left-aligned forms or text */
-.leftAlign {
-  align-items: flex-start;
-  text-align: left;
-  max-width: 50%;
-}
-
-/* Title text */
-.title {
-  font-size: 1rem;
-  font-weight: bold;
-  margin: 0.25rem 0;
-  text-transform: uppercase;
-  text-align: center;
-}
-
-/* Footer line (2px matches container border) */
+/* Footer (1px border top) like snippet */
 .footer {
-  width: 100%;
-  border-top: 2px solid #000; 
-  padding-top: 0.5rem;
-  display: flex;
-  justify-content: space-around;
-}
-
-.footer a {
-  text-decoration: none;
-  color: #000;
-  font-weight: bold;
-  font-size: 0.75rem; 
-}
-
-/* The note at the bottom:
-   - 2px top border to match container
-   - same width as container (90vw, max 600px)
-   - spaced below container
-*/
-.beneath-footer {
-  width: 90vw;
-  max-width: 600px;
-  margin: 0 auto 2vh auto; 
-  border-top: 2px solid #000;
+  border-top: 1px solid #000;
+  margin-top: 20px;
+  padding-top: 10px;
+  font-size: 0.9em;
   text-align: center;
-  font-size: 0.75rem;
-  color: #444;
-  padding-top: 0.5rem;
-  box-sizing: border-box;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Buttons */
-button, .btn {
+/* Minimal link styling, black text, no underline */
+a {
+  color: #000;
+  text-decoration: none;
+}
+
+/* Inline buttons or links that look brutalist (optional) */
+button {
+  font-family: monospace;
+  font-size: 13px;
+  background: #fff;
+  border: 3px solid #000;
+  padding: 10px 20px;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+button:hover {
   background: #000;
   color: #fff;
-  padding: 0.4rem 0.8rem;
-  border: 2px solid #000;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.8rem;
-  margin: 0.25rem 0;
 }
 
-button:hover, .btn:hover {
-  background: #fff;
-  color: #000;
-}
-
-/* Forms */
-form {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
+/* For forms in booking steps */
 label {
+  display: block;
+  text-align: left;
+  margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"] {
+  width: 100%;
+  padding: 5px;
+  border: 3px solid #000;
+  font-family: monospace;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+/* The ASCII calendar container */
+.ascii-calendar {
+  text-align: left;
+  margin: 10px auto;
+  display: inline-block; /* keep it sized to content */
+  border: 3px solid #000;
+  padding: 10px;
+  background: #f8f8f8; /* slight background contrast */
+}
+
+.ascii-calendar pre {
+  margin: 0;
+  padding: 0;
+  font-family: monospace;
+}
+
+/* Clickable days (Mon/Fri/Sat) highlight */
+.ascii-calendar .clickable-day {
+  color: #000;
   font-weight: bold;
-  margin: 0.5rem 0 0.2rem;
-  font-size: 0.8rem;
+  cursor: pointer;
 }
 
-input[type=text],
-input[type=email],
-input[type=tel],
-input[type=date],
-input[type=number] {
-  width: 100%;
-  padding: 0.3rem;
-  margin-bottom: 0.5rem;
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
-  font-size: 0.8rem;
-}
-
-/* If you use <select> somewhere, style it similarly */
-select {
-  width: 100%;
-  padding: 0.3rem;
-  margin-bottom: 0.5rem;
-  border: 2px solid #000;
-  background: #fff;
-  color: #000;
-  font-size: 0.8rem;
-}
-
-/* Prevent iOS from zooming on form inputs */
-input, select {
-  font-size: 16px;
-}
-
-/* Step 4: reduced vertical spacing between items */
-.review-list p {
-  margin: 0.2rem 0; /* tighter vertical spacing */
+/* The month/year controls (Prev / Next) */
+.calendar-controls {
+  margin-bottom: 10px;
+  text-align: center;
 }
