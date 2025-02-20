@@ -2,31 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klif - Booking Step 4</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+  <title>Step 4 - Review</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body onload="initReview()">
+<body onload="initStep4()">
   <div class="box">
-    <h1>Booking - Step 4</h1>
-    <p>Review your details:</p>
-    <p><strong>Product:</strong> <span id="review-product"></span></p>
-    <p><strong>Tickets:</strong> <span id="review-tickets"></span></p>
-    <p><strong>Date:</strong> <span id="review-date"></span></p>
-    <p><strong>Name:</strong> <span id="review-name"></span></p>
-    <p><strong>Email:</strong> <span id="review-email"></span></p>
-    <p><strong>Phone:</strong> <span id="review-phone"></span></p>
+    <h2>Step 4: Review & Confirm</h2>
 
-    <p>Please agree to our <a href="disclaimers.html" target="_blank">disclaimers</a> before proceeding:</p>
-    <label><input type="checkbox" id="disclaimCheck"> I agree</label>
+    <div class="review-item">
+      <strong>Product:</strong> <span id="reviewProduct"></span>
+    </div>
+    <div class="review-item">
+      <strong>Tickets:</strong> <span id="reviewTickets"></span>
+    </div>
+    <div class="review-item">
+      <strong>Date:</strong> <span id="reviewDate"></span>
+    </div>
+    <div class="review-item">
+      <strong>Time:</strong> <span id="reviewTime"></span>
+    </div>
+    <div class="review-item">
+      <strong>Name:</strong> <span id="reviewName"></span>
+    </div>
+    <div class="review-item">
+      <strong>Email:</strong> <span id="reviewEmail"></span>
+    </div>
+    <div class="review-item">
+      <strong>Phone:</strong> <span id="reviewPhone"></span>
+    </div>
 
-    <p><button onclick="confirmBooking()">Pay</button></p>
+    <p>
+      I confirm I have read the 
+      <a href="disclaimers.html">disclaimers</a> and 
+      <a href="terms.html">terms</a>.
+    </p>
+    <label>
+      <input type="checkbox" id="disclaimersCheck">
+      I agree
+    </label><br>
+
+    <button class="button" onclick="step4Pay()">Pay</button>
+
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="faq.html">FAQ</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </div>
   </div>
-
-  <div class="footer">
-    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
-    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
+  <div class="bottom-note">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.<br>
+    Klif©
   </div>
 </body>
 </html>

@@ -2,30 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klif - Booking Step 3</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,
+                 user-scalable=no,maximum-scale=1.0">
+  <title>Step 3 - Your Info</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
 <body>
   <div class="box">
-    <h1>Booking - Step 3</h1>
-    <p>Your info</p>
-    <label for="name">Name:</label>
-    <input type="text" id="name">
+    <h2>Step 3: Your Info</h2>
+    <p>Please fill out your details:</p>
+    <input type="text" id="nameInput" placeholder="Name" class="form-input">
+    <input type="email" id="emailInput" placeholder="Email" class="form-input">
+    <input type="tel" id="phoneInput" placeholder="Phone" class="form-input">
 
-    <label for="email">Email:</label>
-    <input type="email" id="email">
+    <button class="button" onclick="step3Next()">Next</button>
 
-    <label for="phone">Phone:</label>
-    <input type="tel" id="phone">
-
-    <p><button onclick="step3Submit()">Next</button></p>
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="faq.html">FAQ</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </div>
   </div>
-
-  <div class="footer">
-    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
-    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
+  <div class="bottom-note">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.<br>
+    Klif©
   </div>
 </body>
 </html>

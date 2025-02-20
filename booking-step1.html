@@ -2,35 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klif - Booking Step 1</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,
+                 user-scalable=no,maximum-scale=1.0">
+  <title>Step 1 - Choose Tour</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
-<body>
+<body onload="initStep1()">
   <div class="box">
-    <h1>Booking - Step 1</h1>
-    <p>Select Product</p>
+    <h2>Step 1: Choose Product</h2>
+    <p>Select Single or Group Tour:</p>
     <label>
-      <input type="radio" id="singleTour" name="tour" onclick="toggleGroupTickets()"> 
-      Single Tour ($100 / €96)
+      <input type="radio" id="singleRadio" name="tourChoice">
+      Single Tour
     </label><br>
     <label>
-      <input type="radio" id="groupTour" name="tour" onclick="toggleGroupTickets()">
-      Group Tour ($90 / €86) - 3+ participants
-    </label>
+      <input type="radio" id="groupRadio" name="tourChoice">
+      Group Tour (3+)
+    </label><br><br>
 
-    <div id="groupTicketsDiv" style="display:none; margin-top:10px;">
-      <label>Number of participants (3+):</label>
-      <input type="number" id="groupTickets" value="3" min="3" style="width:120px;">
+    <label>Number of Tickets (Group only): </label>
+    <input type="number" id="ticketsInput" value="3" min="3" style="width:60px"><br>
+
+    <p id="totalOutput" style="font-weight:bold;"></p>
+
+    <button class="button" onclick="step1Next()">Next</button>
+
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="faq.html">FAQ</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
     </div>
-
-    <p><button onclick="step1Submit()">Next</button></p>
   </div>
-
-  <div class="footer">
-    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
-    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
+  <div class="bottom-note">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.<br>
+    Klif©
   </div>
 </body>
 </html>

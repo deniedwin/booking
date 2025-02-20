@@ -2,29 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klif - Contact</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+  <title>Contact Klif</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="box">
-    <h1>Contact Klif</h1>
+    <h2>Contact Us</h2>
     <p>WhatsApp: 123123123</p>
-    <label>Name:</label>
-    <input type="text" id="contactName">
-    <label>Email:</label>
-    <input type="email" id="contactEmail">
-    <label>Phone:</label>
-    <input type="tel" id="contactPhone">
-    <label>Message:</label>
-    <input type="text" id="contactMsg" style="width:100%;">
-
-    <p><button onclick="alert('Message sent (simulation)')">Send</button></p>
+    <div style="text-align:left; max-width:400px; margin:0 auto;">
+      <label>Name</label><br>
+      <input type="text" class="form-input" style="width:100%;">
+      <label>Email</label><br>
+      <input type="email" class="form-input" style="width:100%;">
+      <label>Phone</label><br>
+      <input type="tel" class="form-input" style="width:100%;">
+      <label>Message</label><br>
+      <input type="text" class="form-input" style="width:100%;">
+      <button class="button" onclick="alert('Message sent (simulation)')">
+        Send
+      </button>
+    </div>
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="booking-step1.html">Booking</a>
+      <a href="faq.html">FAQ</a>
+      <a href="news.html">News</a>
+    </div>
   </div>
-
-  <div class="footer">
-    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
-    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
+  <div class="bottom-note">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.<br>
+    Klif©
   </div>
 </body>
 </html>

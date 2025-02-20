@@ -2,22 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Klif - Payment Success</title>
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
+  <title>Payment Success</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
 </head>
 <body onload="initSuccess()">
   <div class="box">
-    <h1>Payment Successful</h1>
-    <p>Your order ID: <strong id="orderId"></strong></p>
-    <p>Check your email for confirmation.</p>
-    <p><button onclick="location.href='index.html'">Done</button></p>
+    <h2>Payment Successful</h2>
+    <p>Your payment was successful!</p>
+    <p>Order ID: <strong id="successOrderId"></strong></p>
+    <p>Please check your email for booking confirmation.</p>
+    <button class="button" onclick="location.href='index.html'">Done</button>
+    <div class="bottom-nav">
+      <a href="index.html">Home</a>
+      <a href="faq.html">FAQ</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+    </div>
   </div>
-
-  <div class="footer">
-    <p>&copy; 2025 Klif Est OÜ. All rights reserved.</p>
-    <p>Note: Klif Est OÜ only charges a commission to Klif Curacao BV. The operational company is Klif Curacao BV.</p>
+  <div class="bottom-note">
+    Note: Klif Est OÜ only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.<br>
+    Klif©
   </div>
 </body>
 </html>
