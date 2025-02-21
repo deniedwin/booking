@@ -3,7 +3,7 @@
 /* Global base styles */
 html, body {
   margin: 0;
-  padding: 20px; 
+  padding: 20px;
   background: #fff;
   color: #000;
   font-family: monospace;
@@ -24,14 +24,14 @@ h1, h2, h3, p {
   line-height: 1.3;
 }
 
-/* Optional horizontal rule */
+/* Optional horizontal rule inside box */
 .footer-line {
   border: none;
   border-top: 1px solid #000;
   margin: 20px 0;
 }
 
-/* Bottom nav inside each box */
+/* Bottom nav inside .box */
 .bottom-nav {
   border-top: 1px solid #000;
   margin-top: 20px;
@@ -48,7 +48,7 @@ h1, h2, h3, p {
   text-decoration: underline;
 }
 
-/* Note outside the box at the bottom */
+/* Note outside the box at bottom */
 .bottom-note {
   border-top: 1px solid #000;
   margin: 20px auto 0 auto;
@@ -75,7 +75,7 @@ h1, h2, h3, p {
   color: #000;
 }
 
-/* Tiny plus/minus buttons for Step 1 */
+/* Tiny plus/minus buttons for Step 1 tickets */
 .tiny-btn {
   background: #000;
   color: #fff;
@@ -116,21 +116,15 @@ a:hover {
   margin: 5px 0;
 }
 
-/* Arrow link for disclaimers/terms if desired */
+/* Arrow link for disclaimers/terms if needed */
 .arrow-link {
   text-decoration: underline;
   position: relative;
 }
 
-/* Payment / success placeholders, no special styling needed beyond .box */
-
 /* 
-   Step 2 Calendar with a table-based approach 
-   for a neat grid
-*/
-
-/* Container for the Prev/Next buttons in step2 
-   (already inline) - or .calendar-prevnext for styling
+   Step 2 Table-based Calendar 
+   (No ASCII needed, just a table layout)
 */
 .calendar-prevnext {
   display: inline-block;
@@ -144,31 +138,57 @@ a:hover {
   color: #fff;
 }
 
-/* Brutalist table for the calendar */
 .calendar-table {
   border-collapse: collapse;
-  margin: 10px auto; /* center */
+  margin: 10px auto; /* center table */
+}
+.calendar-table caption {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 .calendar-table th, .calendar-table td {
   border: 2px solid #000;
-  width: 40px; /* consistent column width */
+  width: 40px;
   height: 40px;
   text-align: center;
   vertical-align: middle;
   font-family: monospace;
   font-size: 13px;
-  cursor: pointer;
+  cursor: default;
 }
 .calendar-table th {
   background: #eee;
   font-weight: bold;
 }
 
-/* Highlight Monday(1), Fri(5), Sat(6) or 
-   user-chosen day if needed. 
-   We'll do that in script, or .calendar-highlight if you like
-*/
-.calendar-highlight {
-  background: #000;
-  color: #fff;
+/* Photos Section (No ASCII, single column contact sheet) */
+.photo-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.photo-block {
+  width: 100%;
+  max-width: 400px;  /* ensures no overflow on mobile */
+  margin: 0 auto;
+  text-align: center;
+}
+.photo-square {
+  width: 100%;
+  aspect-ratio: 1;   /* square ratio */
+  border: 5px solid #000; /* thick black outline */
+  box-sizing: border-box;
+  overflow: hidden;  /* hide overflow if image is bigger */
+}
+.square-ratio {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.photo-caption {
+  font-size: 0.8rem;
+  margin: 5px 0 0 0;
+  text-align: center;
+  color: #444;
 }
