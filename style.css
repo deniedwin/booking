@@ -1,5 +1,6 @@
 /* style.css */
 
+/* Global */
 html, body {
   margin: 0;
   padding: 20px; /* smaller than 40px for mobile */
@@ -9,7 +10,7 @@ html, body {
   font-size: 13px;
 }
 
-/* A single black box container, 3px border */
+/* A single black box container (for each page), 3px border */
 .box {
   border: 3px solid #000;
   padding: 20px;
@@ -96,20 +97,12 @@ a:hover {
   font-size: 13px;
 }
 
-
 /* Step 4: smaller vertical spacing for items. */
 .review-item {
   margin: 5px 0;
 }
 
-/* style.css (only the relevant section for alignment) */
-
-/* ... existing styles ... */
-
-/* For ASCII calendar, force a fixed-width font and 
-   align columns by day index. We'll store each day 
-   in a <span> with equal width. 
-*/
+/* ASCII calendar styles (Step 2) */
 .calendar-container {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -120,32 +113,61 @@ a:hover {
   border: 2px solid #000;
   padding: 5px;
   overflow-x: auto; 
-  width: fit-content;  /* shrink to fit content, so it doesn't overflow box */
-  margin: 0 auto;      /* center horizontally */
+  width: fit-content; /* shrink to fit content */
+  margin: 0 auto;     /* center horizontally */
 }
-
 .calendar-row {
   white-space: nowrap;
   margin: 0;
   padding: 0;
 }
-
-/* clickable day style */
 .calendar-day {
   display: inline-block;
-  width: 3ch;      /* enough space for 2-digit day plus bracket */
+  width: 3ch; /* enough space for 2-digit day plus bracket */
   text-align: center;
   cursor: pointer;
   margin-right: 1ch;
 }
-
 .calendar-day:hover {
   background: #000;
   color: #fff;
 }
 
-/* Force underline + arrow indication */
+/* Force underline + arrow indication for disclaimers/terms links, if needed */
 .arrow-link {
   text-decoration: underline;
   position: relative;
+}
+
+/* Photos page styling */
+
+/* ASCII lines above/below images */
+.ascii-border {
+  margin: 0;
+  text-align: center;
+}
+
+/* Container for each photo grouping */
+.photo-frame {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Basic brutalist image style:
+   - centered
+   - optional border
+   - scaled to container
+*/
+.brutalist-img {
+  display: block;
+  margin: 0 auto;
+  border: 2px solid #000;
+  object-fit: cover; /* fill the ratio box */
+}
+
+/* 4:3 aspect ratio for images */
+.ratio-4-3 {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  height: auto;
 }
