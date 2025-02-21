@@ -86,8 +86,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Step 3 input fields: 80% width, centered, 
-   for left/right spacing inside the box */
+/* Step 3 input fields: 80% width, centered */
 .form-input {
   width: 80%;
   margin: 0 auto 10px auto;
@@ -115,7 +114,7 @@ a:hover {
   padding: 5px;
   overflow-x: auto; 
   width: fit-content;
-  margin: 0 auto; /* center horizontally */
+  margin: 0 auto;  /* center horizontally */
 }
 .calendar-row {
   white-space: nowrap;
@@ -134,36 +133,39 @@ a:hover {
   color: #fff;
 }
 
-/* Force underline + arrow indication for disclaimers/terms links if used */
+/* Force underline + arrow indication for disclaimers/terms links if needed */
 .arrow-link {
   text-decoration: underline;
   position: relative;
 }
 
-/* Photos page: fix the width so ASCII lines & images match exactly */
+/* Photos page: responsive approach with ASCII lines, no overflow */
 
 /* Outer container for each photo block */
 .photo-container {
-  width: 400px;      /* fixed width for image + ASCII border alignment */
+  width: 90%;         /* responsive on smaller screens */
+  max-width: 400px;   /* consistent for ASCII line alignment */
   margin: 0 auto 20px;
   text-align: center;
 }
 
-/* ASCII lines above/below the image */
+/* ASCII lines ~28-30 chars wide in monospace;
+   if screen is narrower, user may scroll horizontally inside .ascii-line-top/.bottom */
 .ascii-line-top,
 .ascii-line-bottom {
   margin: 0;
   font-family: monospace;
-  text-align: left;   /* or center, but usually left for ASCII alignment */
+  text-align: left;
+  overflow-x: auto;
 }
 
-/* The image itself at the same fixed width (400px).
-   'object-fit: cover' for consistent fill if images vary in aspect ratio. */
-.photo-fixed-width {
+/* The image: up to 100% of container or 400px,
+   so it doesn't overflow on narrow devices. */
+.photo-responsive {
   display: block;
-  width: 400px;
+  max-width: 100%;
   height: auto;
   margin: 0 auto;
   border: 2px solid #000;
-  object-fit: cover;
+  object-fit: cover;  /* neat fill if aspect ratio differs */
 }
