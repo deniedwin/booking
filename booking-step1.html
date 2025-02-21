@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,
-                 user-scalable=no,maximum-scale=1.0">
+        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
   <title>Step 1 - Choose Tour</title>
   <link rel="stylesheet" href="style.css">
   <script src="script.js"></script>
@@ -15,23 +14,18 @@
     <p>Select Single or Group Tour:</p>
     <label>
       <input type="radio" id="singleRadio" name="tourChoice">
-      Single Ticket: $100/€96
+      Single Ticket
     </label><br>
     <label>
       <input type="radio" id="groupRadio" name="tourChoice">
-      Group Ticket (3+): $90/€86
+      Group Ticket (3+)
     </label><br><br>
 
     <label># Tickets: </label>
     <button class="tiny-btn" onclick="adjustTickets(-1)">-</button>
-    <input 
-      type="number" 
-      id="ticketsInput" 
-      value="1" 
-      style="width:60px; text-align:center;"
-    >
-    <button class="tiny-btn" onclick="adjustTickets(1)">+</button>
-    <br><br>
+    <input type="number" id="ticketsInput" value="1" 
+           style="width:60px; text-align:center;">
+    <button class="tiny-btn" onclick="adjustTickets(1)">+</button><br><br>
 
     <p id="totalOutput" style="font-weight:bold;"></p>
 
@@ -46,7 +40,10 @@
   </div>
   <div class="bottom-note">
     <p>&copy; 2025 Klif. All rights reserved.</p>
-    <p><a href="./desclaimers.html">Desclaimers</a> | <a href="./terms.html">Terms of Service</a></p>
+    <p>
+      <a href="disclaimers.html">Disclaimers</a> | 
+      <a href="terms.html">Terms of Service</a>
+    </p>
   </div>
 </body>
 </html>

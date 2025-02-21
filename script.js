@@ -8,56 +8,49 @@ function getBookingData(key) {
   return localStorage.getItem(key);
 }
 
-/* 
-   STEP 1 LOGIC
-   If tickets <= 2 => Single 
-   If tickets >= 3 => Group
-   If user toggles radio to Group but tickets < 3 => set tickets=3
-   If user toggles radio to Single but tickets >= 3 => set tickets=2
-*/
+/* --- STEP 1 LOGIC: Single vs. Group Tickets --- */
 function initStep1() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
   const ticketsInput = document.getElementById("ticketsInput");
+  const totalOutput = document.getElementById("totalOutput");
 
   // Default: 1 ticket => Single
   ticketsInput.value = "1";
   singleRadio.checked = true;
 
-  // If user toggles radio manually
+  // If user toggles radio
   singleRadio.addEventListener("change", () => {
     let tVal = parseInt(ticketsInput.value) || 1;
     if (tVal >= 3) {
       ticketsInput.value = "2";
     }
-    updateTotal();
+    updateStep1Total();
   });
   groupRadio.addEventListener("change", () => {
     let tVal = parseInt(ticketsInput.value) || 1;
     if (tVal < 3) {
       ticketsInput.value = "3";
     }
-    updateTotal();
+    updateStep1Total();
   });
 
-  // If user types in the input or uses plus/minus
-  ticketsInput.addEventListener("input", updateTotal);
+  // If user types or plus/minus
+  ticketsInput.addEventListener("input", updateStep1Total);
 
-  updateTotal();
+  updateStep1Total();
 }
 
-/** plus/minus function */
 function adjustTickets(delta) {
   const ticketsInput = document.getElementById("ticketsInput");
   let currentVal = parseInt(ticketsInput.value) || 1;
   let newVal = currentVal + delta;
-  if (newVal < 1) newVal = 1; // can't go below 1
+  if (newVal < 1) newVal = 1;
   ticketsInput.value = newVal;
-  updateTotal();
+  updateStep1Total();
 }
 
-/** Recompute total, auto-switch single/group if needed */
-function updateTotal() {
+function updateStep1Total() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
   const ticketsInput = document.getElementById("ticketsInput");
@@ -65,8 +58,7 @@ function updateTotal() {
 
   let tVal = parseInt(ticketsInput.value) || 1;
 
-  // If tickets <= 2 => single
-  // If tickets >= 3 => group
+  // If tickets >=3 => group, else => single
   if (tVal >= 3) {
     groupRadio.checked = true;
   } else {
@@ -75,25 +67,21 @@ function updateTotal() {
 
   let usd = 0, eur = 0;
   if (singleRadio.checked) {
-    // single price
     usd = tVal * 100;
     eur = tVal * 96;
   } else {
-    // group price
     usd = tVal * 90;
     eur = tVal * 86;
   }
   totalOutput.textContent = `Total: $${usd} / €${eur}`;
 }
 
-/** On "Next" button (Step 1) */
 function step1Next() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
   const ticketsInput = document.getElementById("ticketsInput");
   let tVal = parseInt(ticketsInput.value) || 1;
 
-  // final check
   if (tVal < 1) {
     alert("At least 1 ticket is required.");
     return;
@@ -103,7 +91,6 @@ function step1Next() {
     return;
   }
 
-  // store data
   if (singleRadio.checked) {
     setBookingData("product", "Single Tour");
   } else {
@@ -114,7 +101,7 @@ function step1Next() {
   window.location.href = "booking-step2.html";
 }
 
-/* --- STEP 2 LOGIC: ASCII CALENDAR --- */
+/* --- STEP 2 LOGIC: Table-based Calendar --- */
 let calYear, calMonth;
 let selectedDay = null;
 
@@ -122,12 +109,11 @@ function initStep2() {
   const now = new Date();
   calYear = now.getFullYear();
   calMonth = now.getMonth();
-  renderCalendar(calYear, calMonth);
+  renderCalendarTable(calYear, calMonth);
 }
 
-/** Renders an aligned ASCII-like grid with clickable M/F/S. */
-function renderCalendar(year, month) {
-  const container = document.getElementById("asciiCalendar");
+function renderCalendarTable(year, month) {
+  const container = document.getElementById("calendarTableContainer");
   container.innerHTML = ""; 
   selectedDay = null; // reset selection if user navigates months
 
@@ -136,100 +122,97 @@ function renderCalendar(year, month) {
     "July","August","September","October","November","December"
   ];
 
-  // Title
-  const title = document.createElement("div");
-  title.style.textAlign = "center";
-  title.style.fontWeight = "bold";
-  title.textContent = `${monthNames[month].toUpperCase()} ${year}`;
-  container.appendChild(title);
-  
-  // Day headers row
-  const headerRow = document.createElement("div");
-  headerRow.className = "calendar-row";
+  // Create a table
+  const table = document.createElement("table");
+  table.className = "calendar-table";
+
+  // Table caption
+  const caption = document.createElement("caption");
+  caption.textContent = `${monthNames[month].toUpperCase()} ${year}`;
+  table.appendChild(caption);
+
+  // Table header row
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
   const daysHeader = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-  for (let d = 0; d < 7; d++) {
-    const cell = document.createElement("span");
-    cell.className = "calendar-day";
-    cell.style.fontWeight = "bold";
-    cell.textContent = daysHeader[d];
-    headerRow.appendChild(cell);
+  for (let d=0; d<7; d++){
+    const th = document.createElement("th");
+    th.textContent = daysHeader[d];
+    headerRow.appendChild(th);
   }
-  container.appendChild(headerRow);
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
-  // First day, leading spaces
-  const firstDay = new Date(year, month, 1);
-  let dayOfWeek = firstDay.getDay(); // 0=Sun
-  let currentRow = document.createElement("div");
-  currentRow.className = "calendar-row";
-
-  // Leading empty cells
-  for (let i = 0; i < dayOfWeek; i++) {
-    const emptyCell = document.createElement("span");
-    emptyCell.className = "calendar-day";
-    emptyCell.textContent = "  ";
-    currentRow.appendChild(emptyCell);
-  }
-
-  // Days in month
+  // Table body
+  const tbody = document.createElement("tbody");
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
   const daysInMonth = new Date(year, month+1, 0).getDate();
-  for (let d = 1; d <= daysInMonth; d++) {
-    const cell = document.createElement("span");
-    cell.className = "calendar-day";
-    
-    let wd = new Date(year, month, d).getDay();
-    let dayStr = d < 10 ? ` ${d}` : `${d}`;
-    
-    // Highlight if Monday(1), Fri(5), or Sat(6)
-    if (wd === 1 || wd === 5 || wd === 6) {
-      dayStr = `[${dayStr}]`; // bracket
-      cell.style.fontWeight = "bold";
+
+  let row = document.createElement("tr");
+  // leading empty cells
+  for (let i=0; i<firstDay; i++){
+    const emptyTd = document.createElement("td");
+    row.appendChild(emptyTd);
+  }
+
+  for (let d=1; d<=daysInMonth; d++){
+    const currentDate = new Date(year, month, d);
+    const dayOfWeek = currentDate.getDay();
+
+    const td = document.createElement("td");
+    td.textContent = d.toString();
+
+    // highlight Monday(1), Fri(5), Sat(6) or make them clickable
+    if (dayOfWeek===1 || dayOfWeek===5 || dayOfWeek===6) {
       // Make it clickable
-      cell.onclick = () => {
+      td.style.cursor = "pointer";
+      td.style.fontWeight = "bold";
+      td.onclick = () => {
         selectedDay = d;
-        // Display chosen day below the calendar
-        document.getElementById("selectedDate").textContent = 
-          `Selected date: ${dayStr.replace(/\[|\]/g,"")} ${monthNames[month]} ${year}`;
+        document.getElementById("selectedDate").textContent =
+          `Selected date: ${d} ${monthNames[month]} ${year}`;
       };
     }
-    cell.textContent = dayStr;
-    currentRow.appendChild(cell);
 
-    // if we hit Saturday(6), new row
-    if (wd === 6) {
-      container.appendChild(currentRow);
-      currentRow = document.createElement("div");
-      currentRow.className = "calendar-row";
+    row.appendChild(td);
+
+    if (dayOfWeek===6) {
+      // end of the week
+      tbody.appendChild(row);
+      row = document.createElement("tr");
     }
   }
-  // leftover row if any
-  if (currentRow.childNodes.length > 0) {
-    container.appendChild(currentRow);
+  // leftover cells
+  if (row.childNodes.length>0) {
+    tbody.appendChild(row);
   }
+  table.appendChild(tbody);
+
+  container.appendChild(table);
 }
 
 function prevMonth() {
   calMonth--;
-  if (calMonth < 0) {
-    calMonth = 11;
+  if (calMonth<0) {
+    calMonth=11;
     calYear--;
   }
-  renderCalendar(calYear, calMonth);
+  renderCalendarTable(calYear, calMonth);
 }
 function nextMonth() {
   calMonth++;
-  if (calMonth > 11) {
-    calMonth = 0;
+  if (calMonth>11) {
+    calMonth=0;
     calYear++;
   }
-  renderCalendar(calYear, calMonth);
+  renderCalendarTable(calYear, calMonth);
 }
 
-/** Step 2: user clicks "Next" => must have selectedDay + Sunrise/Sunset */
 function step2Next() {
   const sunrise = document.getElementById("sunriseRadio").checked;
   const sunset = document.getElementById("sunsetRadio").checked;
   if (!selectedDay) {
-    alert("Please click on a Monday, Friday, or Saturday in the calendar");
+    alert("Please select a Monday, Friday, or Saturday from the calendar");
     return;
   }
   if (!sunrise && !sunset) {
@@ -248,8 +231,10 @@ function step3Next() {
   const name = document.getElementById("nameInput").value.trim();
   const email = document.getElementById("emailInput").value.trim();
   const phone = document.getElementById("phoneInput").value.trim();
-  if (!name || !email || !phone) {
-    alert("Please fill all fields.");
+
+  // phone might be optional if we removed it, but let's keep the check:
+  if (!name || !email) {
+    alert("Please fill all required fields.");
     return;
   }
   setBookingData("name", name);
@@ -270,7 +255,6 @@ function initStep4() {
   const email = getBookingData("email") || "";
   const phone = getBookingData("phone") || "";
 
-  // Convert numeric month => short name
   const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let monthStr = "";
   if (month) {
@@ -278,52 +262,51 @@ function initStep4() {
     monthStr = monthNames[m] || "";
   }
 
-  // Build text lines with bold labels:
-  let usd = 0, eur = 0;
-  if (product === "Single Tour") {
-    usd = tickets * 100;
-    eur = tickets * 96;
-  } else if (product === "Group Tour") {
-    usd = tickets * 90;
-    eur = tickets * 86;
+  // Compute total
+  let usd=0, eur=0;
+  if (product==="Single Tour") {
+    usd = tickets*100;
+    eur = tickets*96;
+  } else {
+    usd = tickets*90;
+    eur = tickets*86;
   }
 
-  // Create the text with bold label, normal value
   document.getElementById("reviewProduct").innerHTML = `<strong>Product:</strong> ${product}`;
   document.getElementById("reviewTickets").innerHTML = `<strong>Tickets:</strong> ${tickets}`;
   document.getElementById("reviewTotal").innerHTML = `<strong>Total:</strong> $${usd} / €${eur}`;
 
-  let dateStr = (day && monthStr && year) ? `${day} ${monthStr} ${year}` : "N/A";
+  let dateStr = "N/A";
+  if (day && monthStr && year) {
+    dateStr = `${day} ${monthStr} ${year}`;
+  }
   document.getElementById("reviewDate").innerHTML = `<strong>Date:</strong> ${dateStr}`;
-
-  let timeStr = timeSlot || "N/A";
-  document.getElementById("reviewTime").innerHTML = `<strong>Time:</strong> ${timeStr}`;
-
+  document.getElementById("reviewTime").innerHTML = `<strong>Time:</strong> ${timeSlot||"N/A"}`;
   document.getElementById("reviewName").innerHTML = `<strong>Name:</strong> ${name}`;
   document.getElementById("reviewEmail").innerHTML = `<strong>Email:</strong> ${email}`;
   document.getElementById("reviewPhone").innerHTML = `<strong>Phone:</strong> ${phone}`;
 }
 
-/** Called when user clicks "Pay" on Step 4 */
 function step4Pay() {
   const disclaimersCheck = document.getElementById("disclaimersCheck");
   if (!disclaimersCheck.checked) {
-    alert("You must agree to disclaimers & terms before proceeding.");
+    alert("You must agree to disclaimers & terms.");
     return;
   }
-  // generate an order ID
+  // generate order ID
   const orderId = Date.now().toString().slice(-6);
   setBookingData("orderId", orderId);
-  window.location.href = "booking-payment.html";
+  window.location.href="booking-payment.html";
 }
 
 /* --- PAYMENT & SUCCESS LOGIC --- */
 function initPayment() {
   setTimeout(() => {
-    window.location.href = "booking-success.html";
-  }, 2000);
+    window.location.href="booking-success.html";
+  },2000);
 }
 function initSuccess() {
-  const orderId = getBookingData("orderId") || "";
-  document.getElementById("successOrderId").textContent = orderId;
+  const orderId = getBookingData("orderId")||"";
+  document.getElementById("successOrderId") &&
+    (document.getElementById("successOrderId").textContent = orderId);
 }
