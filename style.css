@@ -96,6 +96,7 @@ a:hover {
   font-size: 13px;
 }
 
+
 /* Step 4: smaller vertical spacing for items. */
 .review-item {
   margin: 5px 0;
@@ -141,4 +142,10 @@ a:hover {
 .calendar-day:hover {
   background: #000;
   color: #fff;
+}
+
+/* Force underline + arrow indication */
+.arrow-link {
+  text-decoration: underline;
+  position: relative;
 }

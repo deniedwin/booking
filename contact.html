@@ -3,27 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-        content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1.0">
-  <title>Contact Klif</title>
+        content="width=device-width, initial-scale=1.0,
+                 user-scalable=no,
+                 maximum-scale=1.0">
+  <title>Contact Us</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="box">
     <h2>Contact Us</h2>
-    <p>WhatsApp: 123123123</p>
-    <div style="text-align:left; max-width:400px; margin:0 auto;">
-      <label>Name</label><br>
-      <input type="text" class="form-input" style="width:100%;">
-      <label>Email</label><br>
-      <input type="email" class="form-input" style="width:100%;">
-      <label>Phone</label><br>
-      <input type="tel" class="form-input" style="width:100%;">
-      <label>Message</label><br>
-      <input type="text" class="form-input" style="width:100%;">
-      <button class="button" onclick="alert('Message sent (simulation)')">
-        Send
-      </button>
-    </div>
+
+    <!-- Company Info at Top -->
+    <p>
+      <strong>Klif Curacao B.V.</strong><br>
+      Schottegatweg Noord 32<br>
+      P.O. Box 123<br>
+      Willemstad, Curacao<br>
+      WhatsApp: 123123123
+    </p>
+    <br>
+
+    <!-- Form Fields: Name, Email, Message -->
+    <label>Name</label>
+    <input type="text" class="form-input" id="contactName">
+
+    <label>Email</label>
+    <input type="email" class="form-input" id="contactEmail">
+
+    <label>Message</label>
+    <textarea class="form-input" id="contactMessage" rows="4"></textarea>
+
+    <button class="button" onclick="alert('Message sent (simulation)!')">
+      Send
+    </button>
+
     <div class="bottom-nav">
       <a href="index.html">Home</a>
       <a href="booking-step1.html">Booking</a>
@@ -32,8 +45,9 @@
     </div>
   </div>
   <div class="bottom-note">
-    <p>&copy; 2025 Klif. All rights reserved.</p>
-    <p><a href="./desclaimers.html">Desclaimers</a> | <a href="./terms.html">Terms of Service</a></p>
+    Note: Klif Ireland LTD only charges a commission to Klif Curacao BV. 
+    The operational company is Klif Curacao BV.
+    <br>© Klif
   </div>
 </body>
 </html>

@@ -8,16 +8,13 @@ function getBookingData(key) {
   return localStorage.getItem(key);
 }
 
-/* --- STEP 1 LOGIC --- */
-/* STEP 1 LOGIC */
-
 /* 
+   STEP 1 LOGIC
    If tickets <= 2 => Single 
    If tickets >= 3 => Group
-   If user toggles radio to Group but tickets <3 => set tickets=3
-   If user toggles radio to Single but tickets >2 => set tickets=2
+   If user toggles radio to Group but tickets < 3 => set tickets=3
+   If user toggles radio to Single but tickets >= 3 => set tickets=2
 */
-
 function initStep1() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
@@ -31,7 +28,6 @@ function initStep1() {
   singleRadio.addEventListener("change", () => {
     let tVal = parseInt(ticketsInput.value) || 1;
     if (tVal >= 3) {
-      // forcibly set to 2 if they're switching to Single
       ticketsInput.value = "2";
     }
     updateTotal();
@@ -39,7 +35,6 @@ function initStep1() {
   groupRadio.addEventListener("change", () => {
     let tVal = parseInt(ticketsInput.value) || 1;
     if (tVal < 3) {
-      // forcibly set to 3 if they're switching to Group
       ticketsInput.value = "3";
     }
     updateTotal();
@@ -70,8 +65,8 @@ function updateTotal() {
 
   let tVal = parseInt(ticketsInput.value) || 1;
 
-  // If tickets <=2 => single
-  // If tickets >=3 => group
+  // If tickets <= 2 => single
+  // If tickets >= 3 => group
   if (tVal >= 3) {
     groupRadio.checked = true;
   } else {
@@ -91,7 +86,7 @@ function updateTotal() {
   totalOutput.textContent = `Total: $${usd} / €${eur}`;
 }
 
-/** On "Next" button */
+/** On "Next" button (Step 1) */
 function step1Next() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
@@ -266,7 +261,7 @@ function step3Next() {
 /* --- STEP 4 LOGIC: review & disclaimers --- */
 function initStep4() {
   const product = getBookingData("product") || "";
-  const tickets = getBookingData("tickets") || "";
+  const tickets = parseInt(getBookingData("tickets") || "1", 10);
   const year = getBookingData("year") || "";
   const month = getBookingData("month") || "";
   const day = getBookingData("day") || "";
@@ -275,6 +270,7 @@ function initStep4() {
   const email = getBookingData("email") || "";
   const phone = getBookingData("phone") || "";
 
+  // Convert numeric month => short name
   const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
   let monthStr = "";
   if (month) {
@@ -282,27 +278,40 @@ function initStep4() {
     monthStr = monthNames[m] || "";
   }
 
-  document.getElementById("reviewProduct").textContent = product;
-  document.getElementById("reviewTickets").textContent = tickets;
-  // e.g. "14 Feb 2025"
-  if (day && monthStr && year) {
-    document.getElementById("reviewDate").textContent = `${day} ${monthStr} ${year}`;
-  } else {
-    document.getElementById("reviewDate").textContent = "N/A";
+  // Build text lines with bold labels:
+  let usd = 0, eur = 0;
+  if (product === "Single Tour") {
+    usd = tickets * 100;
+    eur = tickets * 96;
+  } else if (product === "Group Tour") {
+    usd = tickets * 90;
+    eur = tickets * 86;
   }
-  document.getElementById("reviewTime").textContent = timeSlot || "N/A";
-  document.getElementById("reviewName").textContent = name;
-  document.getElementById("reviewEmail").textContent = email;
-  document.getElementById("reviewPhone").textContent = phone;
+
+  // Create the text with bold label, normal value
+  document.getElementById("reviewProduct").innerHTML = `<strong>Product:</strong> ${product}`;
+  document.getElementById("reviewTickets").innerHTML = `<strong>Tickets:</strong> ${tickets}`;
+  document.getElementById("reviewTotal").innerHTML = `<strong>Total:</strong> $${usd} / €${eur}`;
+
+  let dateStr = (day && monthStr && year) ? `${day} ${monthStr} ${year}` : "N/A";
+  document.getElementById("reviewDate").innerHTML = `<strong>Date:</strong> ${dateStr}`;
+
+  let timeStr = timeSlot || "N/A";
+  document.getElementById("reviewTime").innerHTML = `<strong>Time:</strong> ${timeStr}`;
+
+  document.getElementById("reviewName").innerHTML = `<strong>Name:</strong> ${name}`;
+  document.getElementById("reviewEmail").innerHTML = `<strong>Email:</strong> ${email}`;
+  document.getElementById("reviewPhone").innerHTML = `<strong>Phone:</strong> ${phone}`;
 }
 
+/** Called when user clicks "Pay" on Step 4 */
 function step4Pay() {
   const disclaimersCheck = document.getElementById("disclaimersCheck");
   if (!disclaimersCheck.checked) {
-    alert("You must agree to disclaimers/terms");
+    alert("You must agree to disclaimers & terms before proceeding.");
     return;
   }
-  // generate a simple order ID
+  // generate an order ID
   const orderId = Date.now().toString().slice(-6);
   setBookingData("orderId", orderId);
   window.location.href = "booking-payment.html";

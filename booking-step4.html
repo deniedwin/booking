@@ -12,37 +12,31 @@
   <div class="box">
     <h2>Step 4: Review & Confirm</h2>
 
-    <div class="review-item">
-      <strong>Product:</strong> <span id="reviewProduct"></span>
-    </div>
-    <div class="review-item">
-      <strong>Tickets:</strong> <span id="reviewTickets"></span>
-    </div>
-    <div class="review-item">
-      <strong>Date:</strong> <span id="reviewDate"></span>
-    </div>
-    <div class="review-item">
-      <strong>Time:</strong> <span id="reviewTime"></span>
-    </div>
-    <div class="review-item">
-      <strong>Name:</strong> <span id="reviewName"></span>
-    </div>
-    <div class="review-item">
-      <strong>Email:</strong> <span id="reviewEmail"></span>
-    </div>
-    <div class="review-item">
-      <strong>Phone:</strong> <span id="reviewPhone"></span>
-    </div>
+    <p id="reviewProduct"></p>
+    <p id="reviewTickets"></p>
+    <p id="reviewTotal"></p> 
+    <!-- We'll show "Total: $xxx / €xxx" here -->
+
+    <p id="reviewDate"></p>
+    <p id="reviewTime"></p>
+    <p id="reviewName"></p>
+    <p id="reviewEmail"></p>
+    <p id="reviewPhone"></p>
 
     <p>
       I confirm I have read the 
-      <a href="disclaimers.html">disclaimers</a> and 
-      <a href="terms.html">terms</a>.
+      <a href="desclaimers.html" target="_blank" class="arrow-link">
+        disclaimers →
+      </a> and 
+      <a href="terms.html" target="_blank" class="arrow-link">
+        terms →
+      </a>.
     </p>
+    
     <label>
       <input type="checkbox" id="disclaimersCheck">
       I agree
-    </label><br>
+    </label><br><br>
 
     <button class="button" onclick="step4Pay()">Pay</button>
 
