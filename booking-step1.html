@@ -15,15 +15,23 @@
     <p>Select Single or Group Tour:</p>
     <label>
       <input type="radio" id="singleRadio" name="tourChoice">
-      Single Tour
+      Single Ticket
     </label><br>
     <label>
       <input type="radio" id="groupRadio" name="tourChoice">
-      Group Tour (3+)
+      Group Ticket (3+)
     </label><br><br>
 
-    <label>Number of Tickets (Group only): </label>
-    <input type="number" id="ticketsInput" value="3" min="3" style="width:60px"><br>
+    <label># Tickets: </label>
+    <button class="tiny-btn" onclick="adjustTickets(-1)">-</button>
+    <input 
+      type="number" 
+      id="ticketsInput" 
+      value="1" 
+      style="width:60px; text-align:center;"
+    >
+    <button class="tiny-btn" onclick="adjustTickets(1)">+</button>
+    <br><br>
 
     <p id="totalOutput" style="font-weight:bold;"></p>
 

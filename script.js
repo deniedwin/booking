@@ -9,53 +9,113 @@ function getBookingData(key) {
 }
 
 /* --- STEP 1 LOGIC --- */
+/* STEP 1 LOGIC */
+
+/* 
+   If tickets <= 2 => Single 
+   If tickets >= 3 => Group
+   If user toggles radio to Group but tickets <3 => set tickets=3
+   If user toggles radio to Single but tickets >2 => set tickets=2
+*/
+
 function initStep1() {
+  const singleRadio = document.getElementById("singleRadio");
+  const groupRadio = document.getElementById("groupRadio");
+  const ticketsInput = document.getElementById("ticketsInput");
+
+  // Default: 1 ticket => Single
+  ticketsInput.value = "1";
+  singleRadio.checked = true;
+
+  // If user toggles radio manually
+  singleRadio.addEventListener("change", () => {
+    let tVal = parseInt(ticketsInput.value) || 1;
+    if (tVal >= 3) {
+      // forcibly set to 2 if they're switching to Single
+      ticketsInput.value = "2";
+    }
+    updateTotal();
+  });
+  groupRadio.addEventListener("change", () => {
+    let tVal = parseInt(ticketsInput.value) || 1;
+    if (tVal < 3) {
+      // forcibly set to 3 if they're switching to Group
+      ticketsInput.value = "3";
+    }
+    updateTotal();
+  });
+
+  // If user types in the input or uses plus/minus
+  ticketsInput.addEventListener("input", updateTotal);
+
+  updateTotal();
+}
+
+/** plus/minus function */
+function adjustTickets(delta) {
+  const ticketsInput = document.getElementById("ticketsInput");
+  let currentVal = parseInt(ticketsInput.value) || 1;
+  let newVal = currentVal + delta;
+  if (newVal < 1) newVal = 1; // can't go below 1
+  ticketsInput.value = newVal;
+  updateTotal();
+}
+
+/** Recompute total, auto-switch single/group if needed */
+function updateTotal() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
   const ticketsInput = document.getElementById("ticketsInput");
   const totalOutput = document.getElementById("totalOutput");
 
-  function updateTotal() {
-    if (singleRadio.checked) {
-      totalOutput.textContent = "Total: $100 / €96";
-    } else if (groupRadio.checked) {
-      const tVal = parseInt(ticketsInput.value) || 3;
-      const usd = tVal * 90;
-      const eur = tVal * 86;
-      totalOutput.textContent = `Total: $${usd} / €${eur}`;
-    } else {
-      totalOutput.textContent = "";
-    }
+  let tVal = parseInt(ticketsInput.value) || 1;
+
+  // If tickets <=2 => single
+  // If tickets >=3 => group
+  if (tVal >= 3) {
+    groupRadio.checked = true;
+  } else {
+    singleRadio.checked = true;
   }
 
-  // Listen for changes
-  singleRadio.addEventListener("change", updateTotal);
-  groupRadio.addEventListener("change", updateTotal);
-  ticketsInput.addEventListener("input", updateTotal);
-
-  updateTotal(); // Initialize totals
+  let usd = 0, eur = 0;
+  if (singleRadio.checked) {
+    // single price
+    usd = tVal * 100;
+    eur = tVal * 96;
+  } else {
+    // group price
+    usd = tVal * 90;
+    eur = tVal * 86;
+  }
+  totalOutput.textContent = `Total: $${usd} / €${eur}`;
 }
 
+/** On "Next" button */
 function step1Next() {
   const singleRadio = document.getElementById("singleRadio");
   const groupRadio = document.getElementById("groupRadio");
-  if (!singleRadio.checked && !groupRadio.checked) {
-    alert("Please pick Single or Group Tour");
+  const ticketsInput = document.getElementById("ticketsInput");
+  let tVal = parseInt(ticketsInput.value) || 1;
+
+  // final check
+  if (tVal < 1) {
+    alert("At least 1 ticket is required.");
     return;
   }
+  if (groupRadio.checked && tVal < 3) {
+    alert("Group requires at least 3 tickets.");
+    return;
+  }
+
+  // store data
   if (singleRadio.checked) {
     setBookingData("product", "Single Tour");
-    setBookingData("tickets", "1");
   } else {
-    const ticketsInput = document.getElementById("ticketsInput");
-    let tVal = parseInt(ticketsInput.value) || 0;
-    if (tVal < 3) {
-      alert("Minimum 3 tickets for Group Tour.");
-      return;
-    }
     setBookingData("product", "Group Tour");
-    setBookingData("tickets", tVal.toString());
   }
+  setBookingData("tickets", tVal.toString());
+
   window.location.href = "booking-step2.html";
 }
 
